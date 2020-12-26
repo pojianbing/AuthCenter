@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\common.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>LazyAbp.Abp.AuthCenter</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LazyAbp.Abp.AuthCenter.Domain\LazyAbp.Abp.AuthCenter.Domain.csproj" />
+    <ProjectReference Include="..\LazyAbp.Abp.AuthCenter.Application.Contracts\LazyAbp.Abp.AuthCenter.Application.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Volo.Abp.Account.Application" Version="4.0.2" />
+    <PackageReference Include="Volo.Abp.Identity.Application" Version="4.0.2" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.Application" Version="4.0.2" />
+    <PackageReference Include="Volo.Abp.TenantManagement.Application" Version="4.0.2" />
+    <PackageReference Include="Volo.Abp.FeatureManagement.Application" Version="4.0.2" />
+  </ItemGroup>
+
+</Project>
