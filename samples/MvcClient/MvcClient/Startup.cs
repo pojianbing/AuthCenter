@@ -26,24 +26,24 @@ namespace MvcClient
         {
             services.AddControllersWithViews();
 
-            //JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
+            JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
 
-            //services.AddAuthentication(options =>
-            //{
-            //    options.DefaultScheme = "Cookies";
-            //    options.DefaultChallengeScheme = "oidc";
-            //})
-            //    .AddCookie("Cookies")
-            //    .AddOpenIdConnect("oidc", options =>
-            //    {
-            //        options.Authority = "https://localhost:5000";
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = "Cookies";
+                options.DefaultChallengeScheme = "oidc";
+            })
+                .AddCookie("Cookies")
+                .AddOpenIdConnect("oidc", options =>
+                {
+                    options.Authority = "https://localhost:5001";
 
-            //        options.ClientId = "mvc";
-            //        options.ClientSecret = "secret";
-            //        options.ResponseType = "code";
+                    options.ClientId = "mvc";
+                    options.ClientSecret = "1q2w3e*";
+                    options.ResponseType = "code";
 
-            //        options.SaveTokens = true;
-            //    });
+                    options.SaveTokens = true;
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
