@@ -1,8 +1,10 @@
 ﻿using LazyAbp.Abp.AuthCenter.Localization;
 using Volo.Abp.AuditLogging;
+using Volo.Abp.AuditLogging.Localization;
 using Volo.Abp.BackgroundJobs;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
+using Volo.Abp.Identity.Localization;
 using Volo.Abp.IdentityServer;
 using Volo.Abp.Localization;
 using Volo.Abp.Localization.ExceptionHandling;
@@ -46,6 +48,14 @@ namespace LazyAbp.Abp.AuthCenter
                     .Add<AuthCenterResource>("en")
                     .AddBaseTypes(typeof(AbpValidationResource))
                     .AddVirtualJson("/Localization/AuthCenter");
+
+                options.Resources
+                    .Get<IdentityResource>()
+                    .AddVirtualJson("/Volo/Abp/Identity/Localization/HelloAbp");
+
+                options.Resources
+                    .Get<AuditLoggingResource>()
+                    .AddVirtualJson("/Volo/Abp/AuditLogging/Localization");
 
                 options.DefaultResourceType = typeof(AuthCenterResource);
             });
