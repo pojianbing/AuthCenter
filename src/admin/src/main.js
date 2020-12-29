@@ -21,6 +21,9 @@ import './utils/filter' // global filter
 
 import * as filters from './filters' // global filters
 
+import VueParticles from 'vue-particles'
+Vue.use(VueParticles)
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

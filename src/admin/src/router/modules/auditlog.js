@@ -11,7 +11,7 @@ const auditlogRouter = {
       meta: {
         title: 'AbpAuditLogging["AuditLogging"]',
         policy: 'AbpAuditLogging.Default',
-        icon: 'el-icon-document'
+        icon: 'paper'
       }
     }
   ]
