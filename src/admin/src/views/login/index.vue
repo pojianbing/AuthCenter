@@ -1,202 +1,214 @@
 <template>
   <div class="login-container">
-    <el-form
-      ref="loginForm"
-      :model="loginForm"
-      :rules="loginRules"
-      class="login-form"
-      autocomplete="on"
-      label-position="left"
-    >
-      <div class="title-container">
-        <h3 class="title">
-          {{ $t('HelloAbp["Login:Title"]') }}
-        </h3>
-        <lang-select class="set-language" />
-
-        <p class="explain">
-          {{ $t("AbpUiMultiTenancy['Tenant']") }}
-          <el-tooltip
-            :content="$t('AbpUiMultiTenancy[\'Switch\']')"
-            effect="dark"
-            placement="bottom"
-          >
-            <el-link
-              :underline="false"
-              @click="tenantDialogFormVisible = true"
-            ><i>{{
-              currentTenant
-                ? currentTenant
-                : $t("AbpUiMultiTenancy['NotSelected']")
-            }}</i></el-link>
-          </el-tooltip>
-        </p>
-        <p class="explain">
-          {{ $t("AbpAccount['AreYouANewUser']") }}
-          <el-link
-            :underline="false"
-            @click="navitoRegister()"
-          ><i>{{ $t("AbpAccount['Register']") }}</i></el-link>
-        </p>
-      </div>
-
-      <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
-        <el-input
-          ref="username"
-          v-model="loginForm.username"
-          :placeholder="$t('AbpAccount[\'UserNameOrEmailAddress\']')"
-          name="username"
-          type="text"
-          tabindex="1"
+    <vue-particles
+      color="#fff"
+      :particle-opacity="0.9"
+      :particles-number="50"
+      shape-type="star"
+      :particle-size="4"
+      lines-color="#fff"
+      :lines-width="1"
+      :line-linked="true"
+      :line-opacity="0.4"
+      :lines-distance="150"
+      :move-speed="2"
+      :hover-effect="true"
+      hover-mode="grab"
+      :click-effect="true"
+      click-mode="push"
+      class="background"
+    />
+    <div class="loginPanel">
+      <el-image
+        :src="logoPanelBg"
+        fit="fill"
+        class="beauty"
+      />
+      <div class="flex flex-col">
+        <el-form
+          v-if="isLogin"
+          ref="loginForm"
+          :model="loginForm"
+          :rules="loginRules"
+          class="login-form"
           autocomplete="on"
-        />
-      </el-form-item>
-
-      <el-tooltip
-        v-model="capsTooltip"
-        content="Caps lock is On"
-        placement="right"
-        manual
-      >
-        <el-form-item prop="password">
-          <span class="svg-container">
-            <svg-icon icon-class="password" />
-          </span>
-          <el-input
-            :key="passwordType"
-            ref="password"
-            v-model="loginForm.password"
-            :type="passwordType"
-            :placeholder="$t('AbpAccount[\'Password\']')"
-            name="password"
-            tabindex="2"
-            autocomplete="on"
-            @keyup.native="checkCapslock"
-            @blur="capsTooltip = false"
-            @keyup.enter.native="handleLogin"
-          />
-          <span class="show-pwd" @click="showPwd">
-            <svg-icon
-              :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
+          label-position="left"
+        >
+          <div class="title-container">
+            <h3 class="title">欢迎登录</h3>
+          </div>
+          <el-form-item prop="username">
+            <el-input
+              ref="username1"
+              key="loginForm.username"
+              v-model="loginForm.username"
+              placeholder="手机号"
+              name="username"
+              type="text"
+              class="simple"
+              tabindex="1"
+              autocomplete="on"
             />
-          </span>
-        </el-form-item>
-      </el-tooltip>
+          </el-form-item>
 
-      <el-button
-        :loading="loading"
-        type="primary"
-        style="width:100%;margin-bottom:30px;"
-        @click.native.prevent="handleLogin"
-      >
-        {{ $t("AbpAccount['Login']") }}
-      </el-button>
-      <div style="text-align: right;">
-        <el-button
-          v-if="features['HelloAbp.SocialLogins'] === 'true'"
-          class="thirdparty-button"
-          type="primary"
-          size="small"
-          @click="showDialog = true"
-        >
-          {{ $t("HelloAbp['Login:ThirdParty']") }}
-        </el-button>
-      </div>
-    </el-form>
-    <el-dialog
-      :title="$t('AbpUiMultiTenancy[\'SwitchTenant\']')"
-      :visible.sync="tenantDialogFormVisible"
-    >
-      <el-form ref="dataForm" :model="tenant" label-position="top">
-        <el-form-item :label="$t('AbpUiMultiTenancy[\'Name\']')">
-          <el-input v-model="tenant.name" type="text" />
-          <span>{{ $t("AbpUiMultiTenancy['SwitchTenantHint']") }}</span>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="tenantDialogFormVisible = false">
-          {{ $t("AbpTenantManagement['Cancel']") }}
-        </el-button>
-        <el-button
-          type="primary"
-          :disabled="tenantDisabled"
-          @click="saveTenant()"
-        >
-          {{ $t("AbpTenantManagement['Save']") }}
-        </el-button>
-      </div>
-    </el-dialog>
+          <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+            <el-form-item prop="password">
+              <el-input
+                ref="password1"
+                key="password1"
+                v-model="loginForm.password"
+                :type="passwordType1"
+                placeholder="密码"
+                name="password"
+                class="simple"
+                tabindex="2"
+                autocomplete="on"
+                @keyup.native="checkCapslock"
+                @blur="capsTooltip = false"
+                @keyup.enter.native="handleLogin"
+              />
+              <span class="show-pwd" @click="showPwd1">
+                <svg-icon :icon-class="passwordType1 === 'password' ? 'eye' : 'eye-open'" />
+              </span>
+            </el-form-item>
+          </el-tooltip>
 
-    <el-dialog
-      :title="$t('HelloAbp[\'Login:ThirdParty\']')"
-      :visible.sync="showDialog"
-    >
-      {{ $t("HelloAbp['Login:ThirdPartyTips']") }}
-      <br>
-      <br>
-      <br>
-      <social-sign />
-    </el-dialog>
+          <el-button
+            :loading="loading"
+            round
+            type="primary"
+            style="width:100%;margin-bottom:30px;"
+            @click.native.prevent="handleLogin"
+          >确定</el-button>
+        </el-form>
+        <el-form
+          v-else
+          ref="registerForm"
+          :model="registerForm"
+          :rules="registerRules"
+          class="login-form"
+          autocomplete="on"
+          label-position="left"
+        >
+          <div class="title-container">
+            <h3 class="title">注册</h3>
+          </div>
+          <el-form-item prop="username">
+            <el-input
+              ref="username2"
+              v-model="registerForm.username"
+              placeholder="手机号"
+              name="username"
+              class="simple"
+              type="text"
+              tabindex="1"
+              autocomplete="on"
+            />
+          </el-form-item>
+          <el-form-item prop="verifyCode" style="position:relative">
+            <el-input
+              v-model="registerForm.verifyCode"
+              placeholder="验证码"
+              name="verifyCode"
+              class="simple"
+              type="text"
+              tabindex="1"
+              autocomplete="on"
+              maxlength="11"
+            />
+            <el-button type="primary" plain size="mini" class="send-code-button"> 发送验证码</el-button>
+          </el-form-item>
+          <el-tooltip v-model="capsTooltip" content="Caps lock is On" placement="right" manual>
+            <el-form-item prop="password">
+              <el-input
+                ref="password2"
+                key="password2"
+                v-model="registerForm.password"
+                :type="passwordType2"
+                placeholder="设置密码：6-16位，必须包含字母和数字"
+                name="password"
+                class="simple"
+                tabindex="2"
+                autocomplete="on"
+                @keyup.native="checkCapslock"
+                @blur="capsTooltip = false"
+                @keyup.enter.native="handleLogin"
+              />
+              <span class="show-pwd" @click="showPwd2">
+                <svg-icon :icon-class="passwordType2 === 'password' ? 'eye' : 'eye-open'" />
+              </span>
+            </el-form-item>
+          </el-tooltip>
+
+          <el-button
+            :loading="loading"
+            round
+            type="primary"
+            style="width:100%;margin-bottom:30px;"
+            @click.native.prevent="handleRegister"
+          >确定</el-button>
+        </el-form>
+        <div v-if="isLogin" class="flex items-center justify-center">
+          <span class="text-center text-sm">还没账号？</span>
+          <el-link class="text-sm" :underline="false" type="primary" @click="handleChangeViewState(1)">注册</el-link>
+        </div>
+        <div v-else class="flex items-center justify-center">
+          <span class="text-center text-sm">已有账号？</span>
+          <el-link class="text-sm" :underline="false" type="primary" @click="handleChangeViewState(2)">登录</el-link>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import LangSelect from '@/components/LangSelect'
-import SocialSign from './components/SocialSignin'
+import { validUsername } from '@/utils/validate'
+import logoPanelBg from '@/assets/login-panel-bg.png'
 
 export default {
   name: 'Login',
-  components: { LangSelect, SocialSign },
   data() {
+    const validateUsername = (rule, value, callback) => {
+      if (!validUsername(value)) {
+        callback(new Error('Please enter the correct user name'))
+      } else {
+        callback()
+      }
+    }
+    const validatePassword = (rule, value, callback) => {
+      if (value.length < 6) {
+        callback(new Error('密码不少于6个字符'))
+      } else {
+        callback()
+      }
+    }
     return {
       loginForm: {
+        tenant: '',
         username: 'admin',
         password: '1q2w3E*'
       },
       loginRules: {
-        username: [
-          {
-            required: true,
-            message: this.$i18n.t("AbpAccount['ThisFieldIsRequired.']"),
-            trigger: ['blur', 'change']
-          }
-        ],
-        password: [
-          {
-            required: true,
-            message: this.$i18n.t("AbpAccount['ThisFieldIsRequired.']"),
-            trigger: ['blur', 'change']
-          }
-        ]
+        username: [{ trigger: 'blur', validator: validateUsername }],
+        password: [{ trigger: 'blur', validator: validatePassword }]
       },
-      passwordType: 'password',
+      registerForm: {
+        username: '',
+        password: ''
+      },
+      registerRules: {
+        username: [{ trigger: 'blur', validator: validateUsername }],
+        password: [{ trigger: 'blur', validator: validatePassword }]
+      },
+      passwordType1: 'password',
+      passwordType2: 'password',
       capsTooltip: false,
       loading: false,
       showDialog: false,
       redirect: undefined,
       otherQuery: {},
-      tenantDialogFormVisible: false,
-      tenant: { name: this.$store.getters.abpConfig.currentTenant.name }
-    }
-  },
-  computed: {
-    currentTenant() {
-      return this.$store.getters.abpConfig.currentTenant.name
-    },
-    features() {
-      return this.$store.getters.abpConfig.features.values
-    },
-    tenantDisabled() {
-      if (
-        this.tenant.name &&
-        this.tenant.name === this.$store.getters.abpConfig.currentTenant.name
-      ) {
-        return true
-      }
-      return false
+      logoPanelBg,
+      isLogin: true
     }
   },
   watch: {
@@ -216,9 +228,9 @@ export default {
   },
   mounted() {
     if (this.loginForm.username === '') {
-      this.$refs.username.focus()
+      this.$refs.username1.focus()
     } else if (this.loginForm.password === '') {
-      this.$refs.password.focus()
+      this.$refs.password1.focus()
     }
   },
   destroyed() {
@@ -227,16 +239,34 @@ export default {
   methods: {
     checkCapslock(e) {
       const { key } = e
-      this.capsTooltip = key && key.length === 1 && key >= 'A' && key <= 'Z'
+      this.capsTooltip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
     },
-    showPwd() {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
+    showPwd1() {
+      if (this.passwordType1 === 'password') {
+        this.passwordType1 = ''
       } else {
-        this.passwordType = 'password'
+        this.passwordType1 = 'password'
       }
       this.$nextTick(() => {
-        this.$refs.password.focus()
+        this.$refs.password1.focus()
+      })
+    },
+    showPwd2() {
+      if (this.passwordType2 === 'password') {
+        this.passwordType2 = ''
+      } else {
+        this.passwordType2 = 'password'
+      }
+      this.$nextTick(() => {
+        this.$refs.password2.focus()
+      })
+    },
+    handleChangeViewState(state) {
+      this.isLogin = state === 2
+
+      this.$nextTick(() => {
+        this.$refs.loginForm && this.$refs.loginForm.clearValidate()
+        this.$refs.registerForm && this.$refs.registerForm.clearValidate()
       })
     },
     handleLogin() {
@@ -252,7 +282,8 @@ export default {
               })
               this.loading = false
             })
-            .catch(() => {
+            .catch((error) => {
+              console.error(error)
               this.loading = false
             })
         } else {
@@ -261,10 +292,16 @@ export default {
         }
       })
     },
-    navitoRegister() {
-      this.$router.push({
-        path: '/register'
-      })
+    handleRegister() {
+      // this.$refs.registerForm.validate(valid => {
+      //   if (valid) {
+      //     register(this.registerForm).then(res => {
+      //       console.log('注册')
+      //     })
+      //   } else {
+      //     return false
+      //   }
+      // })
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
@@ -273,43 +310,7 @@ export default {
         }
         return acc
       }, {})
-    },
-    saveTenant() {
-      this.$store.dispatch('app/setTenant', this.tenant.name).then(response => {
-        if (response && !response.success) {
-          this.$notify({
-            title: this.$i18n.t("AbpUi['Error']"),
-            message: this.$i18n.t(
-              "AbpUiMultiTenancy['GivenTenantIsNotAvailable']",
-              [this.tenant.name]
-            ),
-            type: 'error',
-            duration: 2000
-          })
-          return
-        }
-
-        this.tenantDialogFormVisible = false
-      })
     }
-    // afterQRScan() {
-    //   if (e.key === 'x-admin-oauth-code') {
-    //     const code = getQueryObject(e.newValue)
-    //     const codeMap = {
-    //       wechat: 'code',
-    //       tencent: 'code'
-    //     }
-    //     const type = codeMap[this.auth_type]
-    //     const codeName = code[type]
-    //     if (codeName) {
-    //       this.$store.dispatch('LoginByThirdparty', codeName).then(() => {
-    //         this.$router.push({ path: this.redirect || '/' })
-    //       })
-    //     } else {
-    //       alert('第三方登录失败')
-    //     }
-    //   }
-    // }
   }
 }
 </script>
@@ -319,44 +320,35 @@ export default {
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
 $bg: #283443;
-$light_gray: #fff;
-$cursor: #fff;
+$light_gray: #000;
+$cursor: #000;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
-  .login-container .login-form .el-input input {
+  .login-container .el-input input {
     color: $cursor;
   }
 }
 
 /* reset element-ui css */
-.login-container .login-form {
+.login-container {
+  background: #f0f2f5 url('../../assets/background1.jpg') no-repeat 50%;
   .el-input {
     display: inline-block;
     height: 47px;
-    width: 85%;
+    width: 100%;
 
     input {
-      background: transparent;
-      border: 0px;
-      -webkit-appearance: none;
-      border-radius: 0px;
+      border-radius: 3px;
       padding: 12px 5px 12px 15px;
-      color: $light_gray;
-      height: 47px;
       caret-color: $cursor;
-
-      &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $bg inset !important;
-        -webkit-text-fill-color: $cursor !important;
-      }
     }
   }
 
   .el-form-item {
     border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 5px;
-    color: #454545;
+    color: white;
   }
 }
 </style>
@@ -364,27 +356,41 @@ $cursor: #fff;
 <style lang="scss" scoped>
 $bg: #2d3a4b;
 $dark_gray: #889aa4;
-$light_gray: #eee;
+$light_gray: #1890ff;
 
 .login-container {
   min-height: 100%;
   width: 100%;
+  height: 100%;
   background-color: $bg;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  .loginPanel {
+    margin: 0 auto;
+    margin-top: 160px;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 4px 4px 8px 0px #cacaca82;
+    z-index: 1;
+    border-radius: 8px;
+    display: flex;
+    height: 480px;
+
+    .beauty{
+      width: 400px;
+      border-radius: 5px;
+    }
+  }
 
   .login-form {
     position: relative;
-    width: 520px;
+    width: 440px;
     max-width: 100%;
-    padding: 160px 35px 0;
+    padding: 0px 35px 0;
     margin: 0 auto;
     overflow: hidden;
-
-    .explain {
-      color: #fff;
-      font-size: 14px;
-      padding-right: 15px;
-    }
   }
 
   .tips {
@@ -399,9 +405,9 @@ $light_gray: #eee;
     }
   }
 
-  .svg-container {
+  .icon-container {
     padding: 6px 5px 6px 15px;
-    color: $dark_gray;
+    color: $light_gray;
     vertical-align: middle;
     width: 30px;
     display: inline-block;
@@ -409,36 +415,35 @@ $light_gray: #eee;
 
   .title-container {
     position: relative;
+    margin-bottom: 80px;
 
     .title {
       font-size: 26px;
-      color: $light_gray;
+      color: black;
       margin: 0px auto 40px auto;
       text-align: center;
       font-weight: bold;
-    }
-
-    .set-language {
-      color: #fff;
-      position: absolute;
-      top: 3px;
-      font-size: 18px;
-      right: 0px;
-      cursor: pointer;
     }
   }
 
   .show-pwd {
     position: absolute;
-    right: 10px;
+    right: 0px;
     top: 7px;
     font-size: 16px;
-    color: $dark_gray;
+    color: $light_gray;
     cursor: pointer;
     user-select: none;
   }
 
+  .send-code-button{
+    position: absolute;
+    right: 0px;
+  }
+
   .thirdparty-button {
+    position: absolute;
+    right: 0;
     bottom: 6px;
   }
 
@@ -446,6 +451,47 @@ $light_gray: #eee;
     .thirdparty-button {
       display: none;
     }
+  }
+
+  .background{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .text-sm {
+    font-size: 0.875rem;
+  }
+
+  .justify-center {
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+  }
+
+  .items-center {
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+  }
+
+  .flex {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+  }
+
+  .flex-col {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
   }
 }
 </style>

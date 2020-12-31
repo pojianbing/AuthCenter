@@ -1,270 +1,272 @@
 <template>
-  <div class="app-container">
-    <div class="filter-container">
-      <el-form
-        ref="logQueryForm"
-        label-position="right"
-        label-width="120px"
-        :model="queryForm"
-      >
-        <el-row>
-          <el-col :span="6">
-            <el-form-item
-              prop="url"
-              :label="$t('AbpAuditLogging[\'Url\']')"
-            >
-              <el-input
-                v-model="queryForm.url"
-                :placeholder="$t('AbpAuditLogging[\'PlaceholderInput\']')"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item
-              prop="httpMethod"
-              :label="$t('AbpAuditLogging[\'HttpMethod\']')"
-            >
-              <el-select
-                v-model="queryForm.httpMethod"
-                clearable
-                style="width:100%"
-                @clear="queryForm.httpMethod=undefined"
+  <el-card shadow="never">
+    <div class="app-container">
+      <div class="filter-container">
+        <el-form
+          ref="logQueryForm"
+          label-position="right"
+          label-width="120px"
+          :model="queryForm"
+        >
+          <el-row>
+            <el-col :span="6">
+              <el-form-item
+                prop="url"
+                :label="$t('AbpAuditLogging[\'Url\']')"
               >
-                <el-option label="获取(GET)" value="GET" />
-                <el-option label="修改(PUT)" value="PUT" />
-                <el-option label="提交(POST)" value="POST" />
-                <el-option label="删除(DELETE)" value="DELETE" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item
-              prop="userName"
-              :label="$t('AbpAuditLogging[\'UserName\']')"
-            >
-              <el-input
-                v-model="queryForm.userName"
-                :placeholder="$t('AbpAuditLogging[\'PlaceholderInput\']')"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item
-              prop="tenantName"
-              :label="$t('AbpAuditLogging[\'TenantName\']')"
-            >
-              <el-input
-                v-model="queryForm.tenantName"
-                :placeholder="$t('AbpAuditLogging[\'PlaceholderInput\']')"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="6">
-            <el-form-item
-              prop="clientIpAddress"
-              :label="$t('AbpAuditLogging[\'ClientIpAddress\']')"
-            >
-              <el-input
-                v-model="queryForm.clientIpAddress"
-                :placeholder="$t('AbpAuditLogging[\'PlaceholderInput\']')"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item
-              prop="ttpStatusCode"
-              :label="$t('AbpAuditLogging[\'HttpStatusCode\']')"
-            >
-              <el-select
-                v-model="queryForm.httpStatusCode"
-                clearable
-                style="width:100%"
-                @clear="queryForm.httpStatusCode=undefined"
+                <el-input
+                  v-model="queryForm.url"
+                  :placeholder="$t('AbpAuditLogging[\'PlaceholderInput\']')"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item
+                prop="httpMethod"
+                :label="$t('AbpAuditLogging[\'HttpMethod\']')"
               >
-                <el-option label="成功(200)" value="200" />
-                <el-option label="未登录(401)" value="401" />
-                <el-option label="未授权(403)" value="403" />
-                <el-option label="未找到资源(404)" value="404" />
-                <el-option label="异常(500)" value="500" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item
-              prop="executionDuration"
-              :label="$t('AbpAuditLogging[\'ExecutionDuration\']')"
-            >
-              <el-input
-                v-model="queryForm.executionDuration"
-                :placeholder="$t('AbpAuditLogging[\'PlaceholderInput\']')"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item
-              prop="applicationName"
-              :label="$t('AbpAuditLogging[\'ApplicationName\']')"
-            >
-              <el-input
-                v-model="queryForm.applicationName"
-                :placeholder="$t('AbpAuditLogging[\'PlaceholderInput\']')"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="9">
-            <el-form-item
-              label="日期"
-            >
-              <el-date-picker
-                v-model="queryDateTime"
-                type="datetimerange"
-                align="right"
-                unlink-panels
-                :picker-options="pickerOptions"
-                :range-separator="$t('AbpAuditLogging[\'RangeSeparator\']')"
-                :start-placeholder="$t('AbpAuditLogging[\'StartPlaceholder\']')"
-                :end-placeholder="$t('AbpAuditLogging[\'EndPlaceholder\']')"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-button
-              type="reset"
-              icon="el-icon-remove-outline"
-              @click="resetQueryForm"
-            >
-              {{ $t('AbpAuditLogging.Reset') }}
-            </el-button>
-            <el-button
-              type="primary"
-              icon="el-icon-search"
-              @click="getList"
-            >
-              {{ $t('AbpAuditLogging.Search') }}
-            </el-button>
-          </el-col>
-        </el-row>
-      </el-form>
-    </div>
+                <el-select
+                  v-model="queryForm.httpMethod"
+                  clearable
+                  style="width:100%"
+                  @clear="queryForm.httpMethod=undefined"
+                >
+                  <el-option label="获取(GET)" value="GET" />
+                  <el-option label="修改(PUT)" value="PUT" />
+                  <el-option label="提交(POST)" value="POST" />
+                  <el-option label="删除(DELETE)" value="DELETE" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item
+                prop="userName"
+                :label="$t('AbpAuditLogging[\'UserName\']')"
+              >
+                <el-input
+                  v-model="queryForm.userName"
+                  :placeholder="$t('AbpAuditLogging[\'PlaceholderInput\']')"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item
+                prop="tenantName"
+                :label="$t('AbpAuditLogging[\'TenantName\']')"
+              >
+                <el-input
+                  v-model="queryForm.tenantName"
+                  :placeholder="$t('AbpAuditLogging[\'PlaceholderInput\']')"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="6">
+              <el-form-item
+                prop="clientIpAddress"
+                :label="$t('AbpAuditLogging[\'ClientIpAddress\']')"
+              >
+                <el-input
+                  v-model="queryForm.clientIpAddress"
+                  :placeholder="$t('AbpAuditLogging[\'PlaceholderInput\']')"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item
+                prop="ttpStatusCode"
+                :label="$t('AbpAuditLogging[\'HttpStatusCode\']')"
+              >
+                <el-select
+                  v-model="queryForm.httpStatusCode"
+                  clearable
+                  style="width:100%"
+                  @clear="queryForm.httpStatusCode=undefined"
+                >
+                  <el-option label="成功(200)" value="200" />
+                  <el-option label="未登录(401)" value="401" />
+                  <el-option label="未授权(403)" value="403" />
+                  <el-option label="未找到资源(404)" value="404" />
+                  <el-option label="异常(500)" value="500" />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item
+                prop="executionDuration"
+                :label="$t('AbpAuditLogging[\'ExecutionDuration\']')"
+              >
+                <el-input
+                  v-model="queryForm.executionDuration"
+                  :placeholder="$t('AbpAuditLogging[\'PlaceholderInput\']')"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item
+                prop="applicationName"
+                :label="$t('AbpAuditLogging[\'ApplicationName\']')"
+              >
+                <el-input
+                  v-model="queryForm.applicationName"
+                  :placeholder="$t('AbpAuditLogging[\'PlaceholderInput\']')"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="9">
+              <el-form-item
+                label="日期"
+              >
+                <el-date-picker
+                  v-model="queryDateTime"
+                  type="datetimerange"
+                  align="right"
+                  unlink-panels
+                  :picker-options="pickerOptions"
+                  :range-separator="$t('AbpAuditLogging[\'RangeSeparator\']')"
+                  :start-placeholder="$t('AbpAuditLogging[\'StartPlaceholder\']')"
+                  :end-placeholder="$t('AbpAuditLogging[\'EndPlaceholder\']')"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-button
+                type="reset"
+                icon="el-icon-remove-outline"
+                @click="resetQueryForm"
+              >
+                {{ $t('AbpAuditLogging.Reset') }}
+              </el-button>
+              <el-button
+                type="primary"
+                icon="el-icon-search"
+                @click="getList"
+              >
+                {{ $t('AbpAuditLogging.Search') }}
+              </el-button>
+            </el-col>
+          </el-row>
+        </el-form>
+      </div>
 
-    <div class="table-container">
-      <el-table
-        :key="tableKey"
-        v-loading="listLoading"
-        :data="list"
-        border
-        fit
-        highlight-current-row
-        style="width: 100%;"
-      >
-        <el-table-column
-          :label="$t('AbpAuditLogging[\'RequestInfo\']')"
-          align="left"
-          width=""
+      <div class="table-container">
+        <el-table
+          :key="tableKey"
+          v-loading="listLoading"
+          :data="list"
+          border
+          fit
+          highlight-current-row
+          style="width: 100%;"
         >
-          <template slot-scope="{ row }">
-            <el-tag :type="row.httpStatusCode | requestStatusCode">
-              {{ row.httpStatusCode }}
-            </el-tag>
-            <el-tag :type="row.httpMethod | requestMethodFilter">
-              {{ row.httpMethod }}
-            </el-tag>
-            <el-tag
-              effect="dark"
-              :type="row.executionDuration | requestDurationFilter"
-            >
-              {{ row.executionDuration }}S
-            </el-tag>
-            <p
-              class="api-block"
-              :class="row.httpMethod | requestMethodFilter"
-            >
-              {{ row.url }}
-            </p>
-          </template>
-        </el-table-column>
-        <el-table-column
-          :label="$t('AbpAuditLogging[\'UserName\']')"
-          prop="userName"
-          align="center"
-          width="120"
-        >
-          <template slot-scope="{ row }">
-            <span>{{ row.userName | empty }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          :label="$t('AbpAuditLogging[\'TenantName\']')"
-          prop="tenantName"
-          align="center"
-          width="120"
-        >
-          <template slot-scope="{ row }">
-            <span>{{ row.tenantName | empty }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          :label="$t('AbpAuditLogging[\'ExecutionTime\']')"
-          prop="executionTime"
-          align="center"
-          width="180"
-        >
-          <template slot-scope="{ row }">
-            <span>{{ row.executionTime | moment }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          :label="$t('AbpAuditLogging[\'ApplicationName\']')"
-          prop="applicationName"
-          align="center"
-          width="120"
-        >
-          <template slot-scope="{ row }">
-            <span>{{ row.applicationName | empty }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          :label="$t('AbpAuditLogging[\'ClientIpAddress\']')"
-          prop="clientIpAddress"
-          align="center"
-          width="120"
-        >
-          <template slot-scope="{ row }">
-            <span>{{ row.clientIpAddress | empty }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          :label="$t('AbpAuditLogging[\'Action\']')"
-          prop="action"
-          align="center"
-          width="120"
-        >
-          <template slot-scope="{ row }">
-            <el-button
-              type="primary"
-              @click="handleDetail(row)"
-            >
-              {{ $t('AbpAuditLogging.Detail') }}
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <pagination
-        v-show="total > 0"
-        :total="total"
-        :page.sync="queryForm.page"
-        :limit.sync="queryForm.limit"
-        @pagination="getList"
-      />
-      <audit-log-details
-        ref="auditLogDetailsDialog"
-      />
+          <el-table-column
+            :label="$t('AbpAuditLogging[\'RequestInfo\']')"
+            align="left"
+            width=""
+          >
+            <template slot-scope="{ row }">
+              <el-tag :type="row.httpStatusCode | requestStatusCode">
+                {{ row.httpStatusCode }}
+              </el-tag>
+              <el-tag :type="row.httpMethod | requestMethodFilter">
+                {{ row.httpMethod }}
+              </el-tag>
+              <el-tag
+                effect="dark"
+                :type="row.executionDuration | requestDurationFilter"
+              >
+                {{ row.executionDuration }}S
+              </el-tag>
+              <p
+                class="api-block"
+                :class="row.httpMethod | requestMethodFilter"
+              >
+                {{ row.url }}
+              </p>
+            </template>
+          </el-table-column>
+          <el-table-column
+            :label="$t('AbpAuditLogging[\'UserName\']')"
+            prop="userName"
+            align="center"
+            width="120"
+          >
+            <template slot-scope="{ row }">
+              <span>{{ row.userName | empty }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            :label="$t('AbpAuditLogging[\'TenantName\']')"
+            prop="tenantName"
+            align="center"
+            width="120"
+          >
+            <template slot-scope="{ row }">
+              <span>{{ row.tenantName | empty }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            :label="$t('AbpAuditLogging[\'ExecutionTime\']')"
+            prop="executionTime"
+            align="center"
+            width="180"
+          >
+            <template slot-scope="{ row }">
+              <span>{{ row.executionTime | moment }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            :label="$t('AbpAuditLogging[\'ApplicationName\']')"
+            prop="applicationName"
+            align="center"
+            width="120"
+          >
+            <template slot-scope="{ row }">
+              <span>{{ row.applicationName | empty }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            :label="$t('AbpAuditLogging[\'ClientIpAddress\']')"
+            prop="clientIpAddress"
+            align="center"
+            width="120"
+          >
+            <template slot-scope="{ row }">
+              <span>{{ row.clientIpAddress | empty }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            :label="$t('AbpAuditLogging[\'Action\']')"
+            prop="action"
+            align="center"
+            width="120"
+          >
+            <template slot-scope="{ row }">
+              <el-button
+                type="primary"
+                @click="handleDetail(row)"
+              >
+                {{ $t('AbpAuditLogging.Detail') }}
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <pagination
+          v-show="total > 0"
+          :total="total"
+          :page.sync="queryForm.page"
+          :limit.sync="queryForm.limit"
+          @pagination="getList"
+        />
+        <audit-log-details
+          ref="auditLogDetailsDialog"
+        />
+      </div>
     </div>
-  </div>
+  </el-card>
 </template>
 
 <script>
