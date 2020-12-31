@@ -1,108 +1,108 @@
 <template>
   <el-card shadow="never">
     <div class="filter-container">
-        <el-input
-          size="small"
-          v-model="listQuery.filter"
-          :placeholder="$t('AbpUi[\'PagerSearch\']')"
-          style="width: 200px;"
-          class="filter-item"
-          @keyup.enter.native="handleFilter"
-        />
-        <el-button
-          size="small"
-          v-if="checkPermission('AbpTenantManagement.Tenants.Create')"
-          class="filter-item"
-          style="margin-left: 10px;"
-          type="primary"
-          icon="el-icon-edit"
-          @click="handleCreate"
-        >
-          {{ $t("AbpTenantManagement['NewTenant']") }}
-        </el-button>
-      </div>
-
-      <el-table
-        :key="tableKey"
-        v-loading="listLoading"
-        :data="list"
-        border
-        fit
-        highlight-current-row
-        style="width: 100%;"
+      <el-input
+        v-model="listQuery.filter"
         size="small"
-        @sort-change="sortChange"
-      >
-        <el-table-column
-          :label="$t('AbpTenantManagement[\'TenantName\']')"
-          prop="name"
-          sortable
-          align="center"
-        >
-          <template slot-scope="{ row }">
-            <span>{{ row.name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          :label="$t('AbpTenantManagement[\'Actions\']')"
-          align="center"
-          width="500"
-          class-name="small-padding fixed-width"
-        >
-          <template slot-scope="{ row, $index }">
-            <el-button
-              v-if="checkPermission('AbpTenantManagement.Tenants.Update')"
-              type="primary"
-              size="mini"
-              @click="handleUpdate(row)"
-            >
-              {{ $t("AbpTenantManagement['Edit']") }}
-            </el-button>
-            <el-button
-              v-if="
-                checkPermission(
-                  'AbpTenantManagement.Tenants.ManageConnectionStrings'
-                )
-              "
-              type="primary"
-              size="mini"
-              @click="handleUpdateConnectionString(row)"
-            >
-              {{
-                $t("AbpTenantManagement['Permission:ManageConnectionStrings']")
-              }}
-            </el-button>
-            <el-button
-              v-if="checkPermission('AbpTenantManagement.Tenants.ManageFeatures')"
-              type="primary"
-              size="mini"
-              @click="handleUpdateFeature(row)"
-            >
-              {{ $t("AbpTenantManagement['Permission:ManageFeatures']") }}
-            </el-button>
-            <el-button
-              v-if="checkPermission('AbpTenantManagement.Tenants.Delete')"
-              size="mini"
-              type="danger"
-              @click="handleDelete(row, $index)"
-            >
-              {{ $t("AbpTenantManagement['Delete']") }}
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-
-      <pagination
-        v-show="total > 0"
-        :total="total"
-        :page.sync="listQuery.page"
-        :limit.sync="listQuery.limit"
-        @pagination="getList"
+        :placeholder="$t('AbpUi[\'PagerSearch\']')"
+        style="width: 200px;"
+        class="filter-item"
+        @keyup.enter.native="handleFilter"
       />
+      <el-button
+        v-if="checkPermission('AbpTenantManagement.Tenants.Create')"
+        size="small"
+        class="filter-item"
+        style="margin-left: 10px;"
+        type="primary"
+        icon="el-icon-edit"
+        @click="handleCreate"
+      >
+        {{ $t("AbpTenantManagement['NewTenant']") }}
+      </el-button>
+    </div>
 
-      <tenant-dialog ref="tenantDialog" @handleFilter="handleFilter" />
-      <connectionstring-dialog ref="connectionstringDialog" />
-      <feature-dialog ref="featureDialog" provider-name="T" />
+    <el-table
+      :key="tableKey"
+      v-loading="listLoading"
+      :data="list"
+      border
+      fit
+      highlight-current-row
+      style="width: 100%;"
+      size="small"
+      @sort-change="sortChange"
+    >
+      <el-table-column
+        :label="$t('AbpTenantManagement[\'TenantName\']')"
+        prop="name"
+        sortable
+        align="center"
+      >
+        <template slot-scope="{ row }">
+          <span>{{ row.name }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        :label="$t('AbpTenantManagement[\'Actions\']')"
+        align="center"
+        width="500"
+        class-name="small-padding fixed-width"
+      >
+        <template slot-scope="{ row, $index }">
+          <el-button
+            v-if="checkPermission('AbpTenantManagement.Tenants.Update')"
+            type="primary"
+            size="mini"
+            @click="handleUpdate(row)"
+          >
+            {{ $t("AbpTenantManagement['Edit']") }}
+          </el-button>
+          <el-button
+            v-if="
+              checkPermission(
+                'AbpTenantManagement.Tenants.ManageConnectionStrings'
+              )
+            "
+            type="primary"
+            size="mini"
+            @click="handleUpdateConnectionString(row)"
+          >
+            {{
+              $t("AbpTenantManagement['Permission:ManageConnectionStrings']")
+            }}
+          </el-button>
+          <el-button
+            v-if="checkPermission('AbpTenantManagement.Tenants.ManageFeatures')"
+            type="primary"
+            size="mini"
+            @click="handleUpdateFeature(row)"
+          >
+            {{ $t("AbpTenantManagement['Permission:ManageFeatures']") }}
+          </el-button>
+          <el-button
+            v-if="checkPermission('AbpTenantManagement.Tenants.Delete')"
+            size="mini"
+            type="danger"
+            @click="handleDelete(row, $index)"
+          >
+            {{ $t("AbpTenantManagement['Delete']") }}
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <pagination
+      v-show="total > 0"
+      :total="total"
+      :page.sync="listQuery.page"
+      :limit.sync="listQuery.limit"
+      @pagination="getList"
+    />
+
+    <tenant-dialog ref="tenantDialog" @handleFilter="handleFilter" />
+    <connectionstring-dialog ref="connectionstringDialog" />
+    <feature-dialog ref="featureDialog" provider-name="T" />
   </el-card>
 </template>
 

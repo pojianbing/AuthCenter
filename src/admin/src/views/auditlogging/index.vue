@@ -3,8 +3,8 @@
     <div>
       <div class="filter-container">
         <el-form
-          size="small"
           ref="logQueryForm"
+          size="small"
           label-position="right"
           label-width="120px"
           :model="queryForm"
@@ -134,14 +134,16 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-button size="small"
+              <el-button
+                size="small"
                 type="reset"
                 icon="el-icon-remove-outline"
                 @click="resetQueryForm"
               >
                 {{ $t('AbpAuditLogging.Reset') }}
               </el-button>
-              <el-button size="small"
+              <el-button
+                size="small"
                 type="primary"
                 icon="el-icon-search"
                 @click="getList"
@@ -264,8 +266,10 @@
           :limit.sync="queryForm.limit"
           @pagination="getList"
         />
-        <audit-log-details v-show="showDetail" @closed="showDetail=false"
+        <audit-log-details
+          v-show="showDetail"
           ref="auditLogDetailsDialog"
+          @closed="showDetail=false"
         />
       </div>
     </div>

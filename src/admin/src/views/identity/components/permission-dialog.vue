@@ -30,10 +30,10 @@
       </el-tabs>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogPermissionFormVisible = false" size="small">
+      <el-button size="small" @click="dialogPermissionFormVisible = false">
         {{ $t("AbpIdentity['Cancel']") }}
       </el-button>
-      <el-button type="primary" @click="updatePermissionData()" size="small">
+      <el-button type="primary" size="small" @click="updatePermissionData()">
         {{ $t("AbpIdentity['Save']") }}
       </el-button>
     </div>

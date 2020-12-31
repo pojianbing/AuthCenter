@@ -42,10 +42,11 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogFormVisible = false" size="small">
+      <el-button size="small" @click="dialogFormVisible = false">
         {{ $t("AbpTenantManagement['Cancel']") }}
       </el-button>
-      <el-button size="small"
+      <el-button
+        size="small"
         type="primary"
         @click="dialogStatus === 'create' ? createData() : updateData()"
       >

@@ -32,11 +32,12 @@
       </aside>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogFormVisible = false" size="small">
+      <el-button size="small" @click="dialogFormVisible = false">
         {{ $t("AbpFeatureManagement['Cancel']") }}
       </el-button>
-      <el-button size="small"
+      <el-button
         v-if="features && features.length != 0"
+        size="small"
         type="primary"
         @click="updateData()"
       >

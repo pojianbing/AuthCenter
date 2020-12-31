@@ -1,134 +1,134 @@
 <template>
   <el-card shadow="never">
     <div class="filter-container">
-        <!-- <el-input
+      <!-- <el-input
           v-model="listQuery.filter"
           :placeholder="$t('AbpUi[\'PagerSearch\']')"
           style="width: 200px;"
           class="filter-item"
           @keyup.enter.native="handleRefresh"
         /> -->
-        <el-button
-          v-if="checkPermission('AbpIdentity.OrganitaionUnits.Create')"
-          class="filter-item"
-          type="primary"
-          icon="el-icon-plus"
-          size="small"
-          @click="handleCreate"
-        >
-          {{ $t("AbpIdentity['NewOrganitaionUnit']") }}
-        </el-button>
-      </div>
-      <el-table
-        :data="list"
-        :load="loadChildren"
-        :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-        style="width: 100%"
-        row-key="id"
-        border
-        fit
-        highlight-current-row
-        lazy
+      <el-button
+        v-if="checkPermission('AbpIdentity.OrganitaionUnits.Create')"
+        class="filter-item"
+        type="primary"
+        icon="el-icon-plus"
         size="small"
+        @click="handleCreate"
       >
-        <el-table-column
-          :label="$t('AbpIdentity[\'OUCode\']')"
-          prop="code"
-        >
-          <template slot-scope="{ row }">
-            <span>{{ row.code }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          :label="$t('AbpIdentity[\'OUDisplayName\']')"
-          prop="displayName"
-        >
-          <template slot-scope="{ row }">
-            <span>{{ row.displayName }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          :label="$t('AbpIdentity[\'Actions\']')"
-          align="center"
-          width="300"
-          class-name="small-padding fixed-width"
-        >
-          <template slot-scope="{ row }">
-            <el-button
-              v-if="checkPermission('AbpIdentity.OrganitaionUnits.Create')"
-              size="mini"
-              type="success"
-              icon="el-icon-arrow-down"
-              @click="handleCreate(row)"
-            >
-              {{ $t("AbpIdentity['NewOrganitaionUnitChild']") }}
-            </el-button>
-            <el-button
-              v-if="checkPermission('AbpIdentity.OrganitaionUnits.Update')"
-              size="mini"
-              type="primary"
-              icon="el-icon-edit"
-              @click="handleUpdate(row)"
-            >
-              {{ $t("AbpIdentity['Edit']") }}
-            </el-button>
-            <el-button
-              v-if="checkPermission('AbpIdentity.OrganitaionUnits.Delete')"
-              size="mini"
-              type="danger"
-              icon="el-icon-delete"
-              @click="handleDelete(row)"
-            >
-              {{ $t("AbpIdentity['Delete']") }}
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-
-      <el-dialog
-        custom-class="custom"
-        :title="dialogStatus==='create'?
-          $t('AbpIdentity[\'NewOrganitaionUnit\']') :
-          dialogStatus==='createChild'?
-            $t('AbpIdentity[\'NewOrganitaionUnitChild\']') :
-            $t('AbpIdentity[\'Edit\']')"
-        :visible.sync="dialogFormVisible"
+        {{ $t("AbpIdentity['NewOrganitaionUnit']") }}
+      </el-button>
+    </div>
+    <el-table
+      :data="list"
+      :load="loadChildren"
+      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+      style="width: 100%"
+      row-key="id"
+      border
+      fit
+      highlight-current-row
+      lazy
+      size="small"
+    >
+      <el-table-column
+        :label="$t('AbpIdentity[\'OUCode\']')"
+        prop="code"
       >
-        <el-form
-          ref="dataForm"
-          :model="temp"
-          label-position="right"
-          label-width="120px"
-          size="small"
-        >
-          <el-form-item
-            v-if="currentParentName!==''"
-            :label="$t('AbpIdentity[\'OUParentDisplayName\']')"
+        <template slot-scope="{ row }">
+          <span>{{ row.code }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        :label="$t('AbpIdentity[\'OUDisplayName\']')"
+        prop="displayName"
+      >
+        <template slot-scope="{ row }">
+          <span>{{ row.displayName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        :label="$t('AbpIdentity[\'Actions\']')"
+        align="center"
+        width="300"
+        class-name="small-padding fixed-width"
+      >
+        <template slot-scope="{ row }">
+          <el-button
+            v-if="checkPermission('AbpIdentity.OrganitaionUnits.Create')"
+            size="mini"
+            type="success"
+            icon="el-icon-arrow-down"
+            @click="handleCreate(row)"
           >
-            <el-input v-model="currentParentName" disabled />
-          </el-form-item>
-          <el-form-item
-            prop="displayName"
-            :label="$t('AbpIdentity[\'OUDisplayName\']')"
-          >
-            <el-input v-model="temp.displayName" />
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false" size="small">
-            {{ $t("AbpIdentity['Cancel']") }}
+            {{ $t("AbpIdentity['NewOrganitaionUnitChild']") }}
           </el-button>
           <el-button
+            v-if="checkPermission('AbpIdentity.OrganitaionUnits.Update')"
+            size="mini"
             type="primary"
-            size="small"
-            @click="dialogStatus === 'create' ||
-              dialogStatus === 'createChild' ?
-                createData() : updateData()"
+            icon="el-icon-edit"
+            @click="handleUpdate(row)"
           >
-            {{ $t("AbpIdentity['Save']") }}
+            {{ $t("AbpIdentity['Edit']") }}
           </el-button>
-        </div>
-      </el-dialog>
+          <el-button
+            v-if="checkPermission('AbpIdentity.OrganitaionUnits.Delete')"
+            size="mini"
+            type="danger"
+            icon="el-icon-delete"
+            @click="handleDelete(row)"
+          >
+            {{ $t("AbpIdentity['Delete']") }}
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <el-dialog
+      custom-class="custom"
+      :title="dialogStatus==='create'?
+        $t('AbpIdentity[\'NewOrganitaionUnit\']') :
+        dialogStatus==='createChild'?
+          $t('AbpIdentity[\'NewOrganitaionUnitChild\']') :
+          $t('AbpIdentity[\'Edit\']')"
+      :visible.sync="dialogFormVisible"
+    >
+      <el-form
+        ref="dataForm"
+        :model="temp"
+        label-position="right"
+        label-width="120px"
+        size="small"
+      >
+        <el-form-item
+          v-if="currentParentName!==''"
+          :label="$t('AbpIdentity[\'OUParentDisplayName\']')"
+        >
+          <el-input v-model="currentParentName" disabled />
+        </el-form-item>
+        <el-form-item
+          prop="displayName"
+          :label="$t('AbpIdentity[\'OUDisplayName\']')"
+        >
+          <el-input v-model="temp.displayName" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="small" @click="dialogFormVisible = false">
+          {{ $t("AbpIdentity['Cancel']") }}
+        </el-button>
+        <el-button
+          type="primary"
+          size="small"
+          @click="dialogStatus === 'create' ||
+            dialogStatus === 'createChild' ?
+              createData() : updateData()"
+        >
+          {{ $t("AbpIdentity['Save']") }}
+        </el-button>
+      </div>
+    </el-dialog>
   </el-card>
 </template>
 

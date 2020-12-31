@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-     custom-class="custom"
+    custom-class="custom"
     :title="$t('AbpTenantManagement[\'ConnectionStrings\']')"
     :visible.sync="dialogFormVisible"
   >
@@ -29,10 +29,10 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogFormVisible = false" size="small">
+      <el-button size="small" @click="dialogFormVisible = false">
         {{ $t("AbpTenantManagement['Cancel']") }}
       </el-button>
-      <el-button type="primary" @click="updateData()" size="small">
+      <el-button type="primary" size="small" @click="updateData()">
         {{ $t("AbpTenantManagement['Save']") }}
       </el-button>
     </div>
