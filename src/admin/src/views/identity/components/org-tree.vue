@@ -2,6 +2,7 @@
   <div class="app-container" style="padding:0 20px;">
     <div class="filter-container">
       <el-input
+        size="small"
         v-model="filterText"
         :placeholder="$t('AbpUi[\'PagerSearch\']')"
       />

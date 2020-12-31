@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    custom-class="custom"
     :title="
       dialogStatus == 'create'
         ? $t('AbpTenantManagement[\'NewTenant\']')
@@ -13,6 +14,7 @@
       :model="temp"
       label-position="right"
       label-width="180px"
+      size="small"
     >
       <el-form-item
         :label="$t('AbpTenantManagement[\'TenantName\']')"
@@ -40,10 +42,10 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogFormVisible = false">
+      <el-button @click="dialogFormVisible = false" size="small">
         {{ $t("AbpTenantManagement['Cancel']") }}
       </el-button>
-      <el-button
+      <el-button size="small"
         type="primary"
         @click="dialogStatus === 'create' ? createData() : updateData()"
       >

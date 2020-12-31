@@ -1,7 +1,6 @@
 <template>
   <el-card shadow="never">
-    <div class="app-container">
-      <el-row :gutter="0">
+    <el-row :gutter="0">
         <el-col :span="6">
           <org-tree
             ref="userOrgTree"
@@ -11,6 +10,7 @@
         <el-col :span="18">
           <div class="filter-container">
             <el-input
+              size="small"
               v-model="listQuery.filter"
               :placeholder="$t('AbpUi[\'PagerSearch\']')"
               style="width: 200px;"
@@ -18,6 +18,7 @@
               @keyup.enter.native="handleFilter"
             />
             <el-button
+              size="small"
               v-if="checkPermission('AbpIdentity.Users.Create')"
               class="filter-item"
               style="margin-left: 10px;"
@@ -28,6 +29,7 @@
               {{ $t("AbpIdentity['NewUser']") }}
             </el-button>
             <el-button
+              size="small"
               class="filter-item"
               style="margin-left: 10px;"
               icon="el-icon-refresh"
@@ -46,6 +48,7 @@
             highlight-current-row
             style="width: 100%;"
             @sort-change="sortChange"
+            size="small"
           >
             <el-table-column
               :label="$t('AbpIdentity[\'UserName\']')"
@@ -121,6 +124,7 @@
           />
 
           <el-dialog
+            custom-class="custom"
             :title="
               dialogStatus == 'create'
                 ? $t('AbpIdentity[\'NewUser\']')
@@ -134,6 +138,7 @@
               :model="temp"
               label-position="right"
               label-width="120px"
+              size="small"
             >
               <el-tabs tab-position="top">
                 <el-tab-pane :label="$t('AbpIdentity[\'UserInformations\']')">
@@ -221,10 +226,11 @@
               slot="footer"
               class="dialog-footer"
             >
-              <el-button @click="dialogFormVisible = false">
+              <el-button @click="dialogFormVisible = false" size="small">
                 {{ $t("AbpIdentity['Cancel']") }}
               </el-button>
               <el-button
+                size="small"
                 type="primary"
                 @click="dialogStatus === 'create' ? createData() : updateData()"
               >
@@ -239,7 +245,6 @@
           />
         </el-col>
       </el-row>
-    </div>
   </el-card>
 </template>
 

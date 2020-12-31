@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    custom-class="custom"
     :title="$t('AbpFeatureManagement[\'Features\']')"
     :visible.sync="dialogFormVisible"
   >
@@ -9,6 +10,7 @@
       :model="temp"
       label-position="right"
       label-width="120px"
+      size="small"
     >
       <el-form-item
         v-for="feature in features"
@@ -30,10 +32,10 @@
       </aside>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogFormVisible = false">
+      <el-button @click="dialogFormVisible = false" size="small">
         {{ $t("AbpFeatureManagement['Cancel']") }}
       </el-button>
-      <el-button
+      <el-button size="small"
         v-if="features && features.length != 0"
         type="primary"
         @click="updateData()"

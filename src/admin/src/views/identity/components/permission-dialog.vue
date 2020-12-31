@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    custom-class="custom"
     :title="
       $t('AbpPermissionManagement[\'Permissions\']') +
         ' - ' +
@@ -7,7 +8,7 @@
     "
     :visible.sync="dialogPermissionFormVisible"
   >
-    <el-form label-position="top">
+    <el-form label-position="top" size="small">
       <el-tabs tab-position="left">
         <el-tab-pane
           v-for="group in permissionData.groups"
@@ -29,10 +30,10 @@
       </el-tabs>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogPermissionFormVisible = false">
+      <el-button @click="dialogPermissionFormVisible = false" size="small">
         {{ $t("AbpIdentity['Cancel']") }}
       </el-button>
-      <el-button type="primary" @click="updatePermissionData()">
+      <el-button type="primary" @click="updatePermissionData()" size="small">
         {{ $t("AbpIdentity['Save']") }}
       </el-button>
     </div>

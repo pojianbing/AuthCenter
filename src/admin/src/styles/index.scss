@@ -130,7 +130,7 @@ aside {
 }
 
 .pagination-container {
-  margin-top: 30px;
+  margin-top: 10px;
 }
 
 .text-center {
@@ -188,4 +188,19 @@ aside {
 
 .multiselect--active {
   z-index: 1000 !important;
+}
+
+.custom .el-dialog__header{
+  background: #fafbfc;
+  border-bottom: 1px solid #eee;
+  padding: 10px;
+}
+
+.custom .el-dialog__header .el-dialog__title{
+  font-size:15px;
+  padding-left: 10px;
+}
+
+.custom .el-dialog__header .el-dialog__headerbtn{
+  top:15px;
 }

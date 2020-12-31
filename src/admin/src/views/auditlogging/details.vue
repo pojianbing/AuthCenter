@@ -1,7 +1,8 @@
 <template>
-  <el-card>
+  <el-card >
     <div class="audit-log-container">
       <el-dialog
+        custom-class="custom"
         :title="logData.url+
           '-'+
           $t('AbpAuditLogging[\'Detail\']')"
@@ -162,7 +163,7 @@
         </el-tabs>
 
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">
+          <el-button @click="dialogVisible = false" size="small">
             {{ $t("AbpAuditLogging['Close']") }}
           </el-button>
         </div>
@@ -197,6 +198,11 @@ export default {
     },
     handleCopyParameters(text, event) {
       clip(text, event)
+    }
+  },
+  watch:{
+    dialogVisible(val){
+      if(!val) this.$emit('closed')
     }
   }
 }

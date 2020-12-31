@@ -17,7 +17,7 @@
       >
         <span
           slot="label"
-        ><svg-icon v-if="tag.meta && tag.meta.icon" :icon-class="tag.meta.icon" /> {{ tag.title }}</span>
+        ><svg-icon v-if="tag.meta && tag.meta.icon" :icon-class="tag.meta.icon" /> {{ generateTitle(tag.title) }}</span>
       </el-tab-pane>
     </el-tabs>
     <el-dropdown @command="handleCommand">
@@ -34,6 +34,7 @@
 
 <script>
 import path from 'path'
+import { generateTitle } from '@/utils/i18n'
 import { mapState } from 'vuex'
 
 export default {
@@ -91,6 +92,7 @@ export default {
     this.activeName = this.$route.path
   },
   methods: {
+    generateTitle,
     isActive(route) {
       return route.path === this.$route.path
     },

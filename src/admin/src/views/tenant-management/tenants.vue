@@ -1,8 +1,8 @@
 <template>
   <el-card shadow="never">
-    <div class="app-container">
-      <div class="filter-container">
+    <div class="filter-container">
         <el-input
+          size="small"
           v-model="listQuery.filter"
           :placeholder="$t('AbpUi[\'PagerSearch\']')"
           style="width: 200px;"
@@ -10,6 +10,7 @@
           @keyup.enter.native="handleFilter"
         />
         <el-button
+          size="small"
           v-if="checkPermission('AbpTenantManagement.Tenants.Create')"
           class="filter-item"
           style="margin-left: 10px;"
@@ -29,6 +30,7 @@
         fit
         highlight-current-row
         style="width: 100%;"
+        size="small"
         @sort-change="sortChange"
       >
         <el-table-column
@@ -101,7 +103,6 @@
       <tenant-dialog ref="tenantDialog" @handleFilter="handleFilter" />
       <connectionstring-dialog ref="connectionstringDialog" />
       <feature-dialog ref="featureDialog" provider-name="T" />
-    </div>
   </el-card>
 </template>
 

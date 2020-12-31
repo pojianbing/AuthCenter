@@ -1,8 +1,8 @@
 <template>
   <el-card shadow="never">
-    <div class="app-container">
-      <div class="filter-container">
+    <div class="filter-container">
         <el-input
+          size="small"
           v-model="listQuery.filter"
           :placeholder="$t('AbpUi[\'PagerSearch\']')"
           style="width: 200px;"
@@ -10,6 +10,7 @@
           @keyup.enter.native="handleFilter"
         />
         <el-button
+          size="small"
           v-if="checkPermission('AbpIdentity.ClaimTypes.Create')"
           class="filter-item"
           style="margin-left: 10px;"
@@ -30,6 +31,7 @@
         highlight-current-row
         style="width: 100%;"
         @sort-change="sortChange"
+        size="small"
       >
         <el-table-column
           :label="$t('AbpIdentity[\'ClaimName\']')"
@@ -109,6 +111,7 @@
       />
 
       <el-dialog
+        custom-class="custom"
         :title="
           dialogStatus == 'create'
             ? $t('AbpIdentity[\'NewClaimType\']')
@@ -122,6 +125,7 @@
           :model="temp"
           label-position="right"
           label-width="150px"
+          size="small"
         >
           <el-form-item :label="$t('AbpIdentity[\'ClaimName\']')" prop="name">
             <el-input v-model="temp.name" />
@@ -157,10 +161,10 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">
+          <el-button @click="dialogFormVisible = false" size="small">
             {{ $t("AbpIdentity['Cancel']") }}
           </el-button>
-          <el-button
+          <el-button size="small"
             type="primary"
             @click="dialogStatus === 'create' ? createData() : updateData()"
           >
@@ -168,7 +172,6 @@
           </el-button>
         </div>
       </el-dialog>
-    </div>
   </el-card>
 </template>
 

@@ -1,7 +1,6 @@
 <template>
   <el-card shadow="never">
-    <div class="app-container">
-      <div class="filter-container">
+    <div class="filter-container">
         <!-- <el-input
           v-model="listQuery.filter"
           :placeholder="$t('AbpUi[\'PagerSearch\']')"
@@ -12,9 +11,9 @@
         <el-button
           v-if="checkPermission('AbpIdentity.OrganitaionUnits.Create')"
           class="filter-item"
-          style="margin-left: 10px;"
           type="primary"
           icon="el-icon-plus"
+          size="small"
           @click="handleCreate"
         >
           {{ $t("AbpIdentity['NewOrganitaionUnit']") }}
@@ -30,6 +29,7 @@
         fit
         highlight-current-row
         lazy
+        size="small"
       >
         <el-table-column
           :label="$t('AbpIdentity[\'OUCode\']')"
@@ -86,6 +86,7 @@
       </el-table>
 
       <el-dialog
+        custom-class="custom"
         :title="dialogStatus==='create'?
           $t('AbpIdentity[\'NewOrganitaionUnit\']') :
           dialogStatus==='createChild'?
@@ -98,6 +99,7 @@
           :model="temp"
           label-position="right"
           label-width="120px"
+          size="small"
         >
           <el-form-item
             v-if="currentParentName!==''"
@@ -113,11 +115,12 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">
+          <el-button @click="dialogFormVisible = false" size="small">
             {{ $t("AbpIdentity['Cancel']") }}
           </el-button>
           <el-button
             type="primary"
+            size="small"
             @click="dialogStatus === 'create' ||
               dialogStatus === 'createChild' ?
                 createData() : updateData()"
@@ -126,8 +129,6 @@
           </el-button>
         </div>
       </el-dialog>
-
-    </div>
   </el-card>
 </template>
 

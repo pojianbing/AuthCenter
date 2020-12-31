@@ -1,8 +1,9 @@
 <template>
   <el-card shadow="never">
-    <div class="app-container">
+    <div>
       <div class="filter-container">
         <el-form
+          size="small"
           ref="logQueryForm"
           label-position="right"
           label-width="120px"
@@ -133,14 +134,14 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-button
+              <el-button size="small"
                 type="reset"
                 icon="el-icon-remove-outline"
                 @click="resetQueryForm"
               >
                 {{ $t('AbpAuditLogging.Reset') }}
               </el-button>
-              <el-button
+              <el-button size="small"
                 type="primary"
                 icon="el-icon-search"
                 @click="getList"
@@ -160,6 +161,7 @@
           border
           fit
           highlight-current-row
+          size="small"
           style="width: 100%;"
         >
           <el-table-column
@@ -246,6 +248,7 @@
           >
             <template slot-scope="{ row }">
               <el-button
+                size="mini"
                 type="primary"
                 @click="handleDetail(row)"
               >
@@ -261,7 +264,7 @@
           :limit.sync="queryForm.limit"
           @pagination="getList"
         />
-        <audit-log-details
+        <audit-log-details v-show="showDetail" @closed="showDetail=false"
           ref="auditLogDetailsDialog"
         />
       </div>
@@ -343,7 +346,8 @@ export default {
         hasException: false,
         httpStatusCode: undefined
       }, baseListQuery),
-      pickerOptions: pickerRangeWithHotKey
+      pickerOptions: pickerRangeWithHotKey,
+      showDetail: false
     }
   },
   created() {
@@ -378,6 +382,7 @@ export default {
     },
     handleDetail(row) {
       // console.log('detail-data:', row)
+      this.showDetail = true
       this.$refs['auditLogDetailsDialog'].createLogInfo(row)
     }
   }

@@ -1,7 +1,6 @@
 <template>
   <el-card shadow="never">
-    <div class="app-container">
-      <el-row :gutter="0">
+    <el-row :gutter="0">
         <el-col :span="6">
           <org-tree
             ref="roleOrgTree"
@@ -11,6 +10,7 @@
         <el-col :span="18">
           <div class="filter-container">
             <el-button
+              size="small"
               v-if="checkPermission('AbpIdentity.Roles.Create')"
               class="filter-item"
               style="margin-left: 10px;"
@@ -21,6 +21,7 @@
               {{ $t("AbpIdentity['NewRole']") }}
             </el-button>
             <el-button
+              size="small"
               class="filter-item"
               style="margin-left: 10px;"
               icon="el-icon-refresh"
@@ -38,6 +39,7 @@
             fit
             highlight-current-row
             style="width: 100%;"
+            size="small"
             @sort-change="sortChange"
           >
             <el-table-column
@@ -94,6 +96,7 @@
           />
 
           <el-dialog
+            custom-class="custom"
             :title="
               dialogStatus == 'create'
                 ? $t('AbpIdentity[\'NewRole\']')
@@ -107,6 +110,7 @@
               :model="temp"
               label-position="right"
               label-width="120px"
+              size="small"
             >
               <el-form-item :label="$t('AbpIdentity[\'OrganitaionUnits\']')" prop="orgName">
                 <el-input v-model="orgName" disabled />
@@ -128,10 +132,11 @@
               </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-              <el-button @click="dialogFormVisible = false">
+              <el-button @click="dialogFormVisible = false" size="small">
                 {{ $t("AbpIdentity['Cancel']") }}
               </el-button>
               <el-button
+                size="small"
                 type="primary"
                 @click="dialogStatus === 'create' ? createData() : updateData()"
               >
@@ -143,7 +148,6 @@
           <permission-dialog ref="permissionDialog" provider-name="R" />
         </el-col>
       </el-row>
-    </div>
   </el-card>
 </template>
 
