@@ -1,78 +1,155 @@
 <template>
-  <div id="tags-view-container" class="tags-view-container">
-    <scroll-pane ref="scrollPane" class="tags-view-wrapper" @scroll="handleScroll">
-      <router-link
+  <div id="tags-view-container" class="tabs-bar-container">
+    <el-tabs
+      v-model="activeName"
+      type="card"
+      class="tabs-content"
+      :class="['tabs-content-' + tagsStyle]"
+      @tab-remove="closeSelectedTagByPath"
+      @tab-click="handleSwitchRouter"
+    >
+      <el-tab-pane
         v-for="tag in visitedViews"
-        ref="tag"
         :key="tag.path"
-        :class="isActive(tag)?'active':''"
-        :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }"
-        tag="span"
-        class="tags-view-item"
-        @click.middle.native="!isAffix(tag)?closeSelectedTag(tag):''"
-        @contextmenu.prevent.native="openMenu(tag,$event)"
+        ref="tag"
+        :name="tag.path"
+        :closable="!tag.meta || !tag.meta.affix"
       >
-        {{ generateTitle(tag.title) }}
-        <span v-if="!isAffix(tag)" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
-      </router-link>
-    </scroll-pane>
-    <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
-      <li @click="refreshSelectedTag(selectedTag)">{{ $t('HelloAbp[\'TagsView:Refresh\']') }}</li>
-      <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">{{ $t('HelloAbp[\'TagsView:Close\']') }}</li>
-      <li @click="closeOthersTags">{{ $t('HelloAbp[\'TagsView:CloseOthers\']') }}</li>
-      <li @click="closeAllTags(selectedTag)">{{ $t('HelloAbp[\'TagsView:CloseAll\']') }}</li>
-    </ul>
+        <span
+          slot="label"
+        ><svg-icon v-if="tag.meta && tag.meta.icon" :icon-class="tag.meta.icon" /> {{ tag.title }}</span>
+      </el-tab-pane>
+    </el-tabs>
+    <el-dropdown @command="handleCommand">
+      <span class="el-dropdown-link">更多<i class="el-icon-arrow-down el-icon--right" /> </span>
+      <el-dropdown-menu slot="dropdown">
+        <el-dropdown-item command="closeOther"><i class="el-icon-close" />关闭其他</el-dropdown-item>
+        <el-dropdown-item command="closeLeft"><i class="el-icon-back" />关闭左侧</el-dropdown-item>
+        <el-dropdown-item command="closeRight"><i class="el-icon-right" />关闭右侧</el-dropdown-item>
+        <el-dropdown-item command="closeAll"><i class="el-icon-close" />关闭全部</el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
   </div>
 </template>
 
 <script>
-import ScrollPane from './ScrollPane'
-import { generateTitle } from '@/utils/i18n'
 import path from 'path'
+import { mapState } from 'vuex'
 
 export default {
-  components: { ScrollPane },
   data() {
     return {
-      visible: false,
       top: 0,
       left: 0,
-      selectedTag: {},
-      affixTags: []
+      affixTags: [],
+      activeName: ''
     }
   },
   computed: {
+    ...mapState({
+      tagsStyle: state => state.settings.tagsStyle
+    }),
     visitedViews() {
-      return this.$store.state.tagsView.visitedViews
+      var views = []
+
+      this.$store.state.tagsView.visitedViews.forEach(view => {
+        if (!view.meta) {
+          view.meta = {}
+        }
+        if (!view.meta.icon) {
+          view.meta.icon = this.findIcon(view.path)
+        }
+        views.push(view)
+      })
+
+      return views
     },
     routes() {
       return this.$store.state.permission.routes
+    },
+    selectedTag() {
+      return this.visitedViews.find(e => e.path === this.activeName)
+    },
+    allViews() {
+      const routes = []
+      this.$store.state.permission.routes.forEach(r => {
+        this.visitRoute(r, routes)
+      })
+
+      return routes
     }
   },
   watch: {
     $route() {
       this.addTags()
-      this.moveToCurrentTag()
-    },
-    visible(value) {
-      if (value) {
-        document.body.addEventListener('click', this.closeMenu)
-      } else {
-        document.body.removeEventListener('click', this.closeMenu)
-      }
+      this.activeName = this.$route.path
     }
   },
   mounted() {
     this.initTags()
     this.addTags()
+    this.activeName = this.$route.path
   },
   methods: {
-    generateTitle, // generateTitle by vue-i18n
     isActive(route) {
       return route.path === this.$route.path
     },
     isAffix(tag) {
       return tag.meta && tag.meta.affix
+    },
+    visitRoute(parent, plainRoutes, basePath = '/') {
+      const tagPath = path.resolve(basePath, parent.path)
+      plainRoutes.push({
+        fullPath: tagPath,
+        path: tagPath,
+        name: parent.name,
+        meta: { ...parent.meta },
+        parent: parent.parent
+      })
+
+      if (!parent.children) return
+
+      parent.children.forEach(c => {
+        c.parent = parent
+        this.visitRoute(c, plainRoutes, tagPath)
+      })
+    },
+    findIcon(path) {
+      var route = this.allViews.find(e => e.path === path)
+      const noIcon = !route.meta || !route.meta.icon
+      const noParent = !route.parent
+
+      if (!noIcon) return route.meta.icon
+
+      // 包括父级在内没iocn
+      if (noParent) {
+        return 'link'
+      } else {
+        return this.findIcon(route.parent.path)
+      }
+    },
+    handleCommand(command) {
+      switch (command) {
+        case 'closeAll':
+          this.closeAllTags({})
+          break
+        case 'closeOther':
+          this.closeOthersTags()
+          break
+        case 'closeLeft':
+          this.closeLeftTags()
+          break
+        case 'closeRight':
+          this.closeRightTags()
+          break
+      }
+    },
+    handleSwitchRouter() {
+      this.$router.push({
+        path: this.selectedTag.path,
+        query: this.selectedTag.query,
+        fullPath: this.selectedTag.fullPath
+      })
     },
     filterAffixTags(routes, basePath = '/') {
       let tags = []
@@ -111,21 +188,23 @@ export default {
       }
       return false
     },
-    moveToCurrentTag() {
-      const tags = this.$refs.tag
-      this.$nextTick(() => {
-        for (const tag of tags) {
-          if (tag.to.path === this.$route.path) {
-            this.$refs.scrollPane.moveToTarget(tag)
-            // when query is different then update
-            if (tag.to.fullPath !== this.$route.fullPath) {
-              this.$store.dispatch('tagsView/updateVisitedView', this.$route)
-            }
-            break
-          }
-        }
-      })
-    },
+    // moveToCurrentTag () {
+    //   const tags = this.$refs.tag
+    //   console.log(tags.to)
+
+    //   this.$nextTick(() => {
+    //     for (const tag of tags) {
+    //       if (tag.to.path === this.$route.path) {
+    //         this.$refs.scrollPane.moveToTarget(tag)
+    //         // when query is different then update
+    //         if (tag.to.fullPath !== this.$route.fullPath) {
+    //           this.$store.dispatch('tagsView/updateVisitedView', this.$route)
+    //         }
+    //         break
+    //       }
+    //     }
+    //   })
+    // },
     refreshSelectedTag(view) {
       this.$store.dispatch('tagsView/delCachedView', view).then(() => {
         const { fullPath } = view
@@ -135,6 +214,12 @@ export default {
           })
         })
       })
+    },
+    closeSelectedTagByPath(path) {
+      var view = this.visitedViews.find(e => e.path === path)
+      if (!view) return
+
+      this.closeSelectedTag(view)
     },
     closeSelectedTag(view) {
       this.$store.dispatch('tagsView/delView', view).then(({ visitedViews }) => {
@@ -146,7 +231,7 @@ export default {
     closeOthersTags() {
       this.$router.push(this.selectedTag)
       this.$store.dispatch('tagsView/delOthersViews', this.selectedTag).then(() => {
-        this.moveToCurrentTag()
+        // this.moveToCurrentTag()
       })
     },
     closeAllTags(view) {
@@ -155,6 +240,18 @@ export default {
           return
         }
         this.toLastView(visitedViews, view)
+      })
+    },
+    closeLeftTags() {
+      this.$router.push(this.selectedTag)
+      this.$store.dispatch('tagsView/delLeftViews', this.selectedTag).then(() => {
+        // this.moveToCurrentTag()
+      })
+    },
+    closeRightTags() {
+      this.$router.push(this.selectedTag)
+      this.$store.dispatch('tagsView/delRightViews', this.selectedTag).then(() => {
+        // this.moveToCurrentTag()
       })
     },
     toLastView(visitedViews, view) {
@@ -171,124 +268,159 @@ export default {
           this.$router.push('/')
         }
       }
-    },
-    openMenu(tag, e) {
-      const menuMinWidth = 105
-      const offsetLeft = this.$el.getBoundingClientRect().left // container margin left
-      const offsetWidth = this.$el.offsetWidth // container width
-      const maxLeft = offsetWidth - menuMinWidth // left boundary
-      const left = e.clientX - offsetLeft + 15 // 15: margin right
-
-      if (left > maxLeft) {
-        this.left = maxLeft
-      } else {
-        this.left = left
-      }
-
-      this.top = e.clientY
-      this.visible = true
-      this.selectedTag = tag
-    },
-    closeMenu() {
-      this.visible = false
-    },
-    handleScroll() {
-      this.closeMenu()
     }
   }
 }
+
 </script>
 
-<style lang="scss" scoped>
-.tags-view-container {
-  height: 34px;
-  width: 100%;
-  background: #fff;
-  border-bottom: 1px solid #d8dce5;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
-  .tags-view-wrapper {
-    .tags-view-item {
-      display: inline-block;
-      position: relative;
-      cursor: pointer;
-      height: 26px;
-      line-height: 26px;
-      border: 1px solid #d8dce5;
-      color: #495060;
-      background: #fff;
-      padding: 0 8px;
-      font-size: 12px;
-      margin-left: 5px;
-      margin-top: 4px;
-      &:first-of-type {
-        margin-left: 15px;
-      }
-      &:last-of-type {
-        margin-right: 15px;
-      }
-      &.active {
-        background-color: #42b983;
-        color: #fff;
-        border-color: #42b983;
-        &::before {
-          content: '';
-          background: #fff;
-          display: inline-block;
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          position: relative;
-          margin-right: 2px;
-        }
-      }
-    }
-  }
-  .contextmenu {
-    margin: 0;
-    background: #fff;
-    z-index: 3000;
-    position: absolute;
-    list-style-type: none;
-    padding: 5px 0;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 400;
-    color: #333;
-    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, .3);
-    li {
-      margin: 0;
-      padding: 7px 16px;
-      cursor: pointer;
-      &:hover {
-        background: #eee;
-      }
-    }
-  }
-}
-</style>
+<style lang="scss" >
 
-<style lang="scss">
-//reset element css of el-icon-close
-.tags-view-wrapper {
-  .tags-view-item {
-    .el-icon-close {
-      width: 16px;
-      height: 16px;
-      vertical-align: 2px;
-      border-radius: 50%;
-      text-align: center;
-      transition: all .3s cubic-bezier(.645, .045, .355, 1);
-      transform-origin: 100% 50%;
-      &:before {
-        transform: scale(.6);
-        display: inline-block;
-        vertical-align: -3px;
-      }
-      &:hover {
-        background-color: #b4bccc;
-        color: #fff;
-      }
-    }
-  }
+.tabs-bar-container {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  align-content: center;
+  align-items: center;
+  justify-content: space-between;
+  height: 50px;
+  padding-right: 20px;
+  padding-left: 20px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background: #fff;
+  border-top: 1px solid #f6f6f6;
 }
+
+/*** card start ***/
+
+.tabs-bar-container .tabs-content-card {
+  height: 34px;
+}
+
+.tabs-bar-container .tabs-content {
+  width: calc(100% - 60px);
+}
+.tabs-bar-container .tabs-content-card .el-tabs__header,
+.tabs-bar-container .tabs-content-smart .el-tabs__header,
+.tabs-bar-container .tabs-content-smooth .el-tabs__header {
+  border-bottom: 0;
+}
+
+.tabs-bar-container .tabs-content-card .el-tabs__header .el-tabs__item {
+  box-sizing: border-box;
+  height: 34px;
+  margin-right: 5px;
+  line-height: 34px;
+  border: 1px solid #dcdfe6;
+  border-radius: 2.5px;
+  transition: padding 0.3s cubic-bezier(0.645, 0.045, 0.355, 1) !important;
+}
+
+.tabs-bar-container .tabs-content-card .el-tabs__header .el-tabs__item.is-active {
+  color: #1890ff;
+  background: rgba(24, 144, 255, 0.1);
+  border: 1px solid #1890ff;
+}
+
+.tabs-bar-container .tabs-content-card .el-tabs__header .el-tabs__nav,
+.tabs-bar-container .tabs-content-smart .el-tabs__header .el-tabs__nav,
+.tabs-bar-container .tabs-content-smooth .el-tabs__header .el-tabs__nav {
+  border: 0;
+}
+
+.tabs-bar-container .tabs-content-card .el-tabs__nav-next,
+.tabs-bar-container .tabs-content-card .el-tabs__nav-prev,
+.tabs-bar-container .tabs-content-smart .el-tabs__nav-next,
+.tabs-bar-container .tabs-content-smart .el-tabs__nav-prev,
+.tabs-bar-container .tabs-content-smooth .el-tabs__nav-next,
+.tabs-bar-container .tabs-content-smooth .el-tabs__nav-prev {
+  height: 34px;
+  line-height: 34px;
+}
+
+.tabs-bar-container .tabs-content-card .el-tabs__item {
+  font-size: 12px;
+}
+
+/*** card end ***/
+
+/*** smart start ***/
+
+.tabs-bar-container .tabs-content-smart  {
+  height: 34px;
+}
+
+.tabs-bar-container .tabs-content-smart .el-tabs__header .el-tabs__item {
+    height: 34px;
+    margin-right: 5px;
+    line-height: 34px;
+    border: 0;
+    transition: padding .3s cubic-bezier(.645,.045,.355,1)!important;
+}
+
+.tabs-bar-container .tabs-content-smart .el-tabs__header .el-tabs__item.is-active:after {
+    width: 100%;
+    transition: all .3s cubic-bezier(.645,.045,.355,1),border 0s,background 0s,color 0s,font-size 0s;
+}
+
+.tabs-bar-container .tabs-content-smart .el-tabs__header .el-tabs__item:after {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    content: "";
+    background-color: #1890ff;
+    transition: all .3s cubic-bezier(.645,.045,.355,1),border 0s,background 0s,color 0s,font-size 0s;
+}
+
+.tabs-bar-container .tabs-content-smart .el-tabs__header .el-tabs__item.is-active {
+    background: rgba(24,144,255,.1);
+}
+
+/*** smart end ***/
+
+/*** smart start ***/
+.tabs-bar-container .tabs-content-smooth  {
+  height: 38px;
+}
+
+.tabs-bar-container .tabs-content-smooth .el-tabs__header .el-tabs__item {
+    height: 38px;
+    padding: 0 30px 0 30px;
+    margin-top: 6px;
+    margin-right: -15px;
+    line-height: 38px;
+    border: 0;
+    transition: padding .3s cubic-bezier(.645,.045,.355,1)!important;
+}
+
+.tabs-bar-container .tabs-content-smooth .el-tabs__header .el-tabs__item.is-active, .tabs-bar-container .tabs-content-smooth .el-tabs__header .el-tabs__item.is-active:hover, .tabs-bar-container .tabs-content-smooth .el-tabs__header .el-tabs__item:hover {
+    padding: 0 30px 0 30px;
+    -webkit-mask: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANoAAAAkCAYAAADvhSSyAAAACXBIWXMAAAsTAAALEwEAmpwYAAABbUlEQVR4nO3d4U3CUBSG4beJA9QNcAJhAtnAOoGOwCaOoBvoCDgBOIHdQDbAH7cJMaHtxcJB6/skJ6Thptw/H+cSktOCn5kCc+AWKJtraaxqYA28A8/N9cktgE9ga1n/tBYcqDhw/QtQHfoh0gitgdkpbrzg/N8klvWbKruz5Xa0CbAi/R6TtDMjdbdOF5k3qzBk0j4VRwzazbC9SKN1nbMo9+j4QTo+SvpuA1z2LcoN2nbYXqRR681R7tFR0gAGTQpg0KQABk0KYNCkAAZNCmDQpAAGTQpg0KQABk0KYNCkAAZNCmDQpAAGTQpg0KQABk0KYNCkAAZNGq4kjTRolRM0x31L3Sb0TMLKCZqTiaVu9/QErW+oyAQHp0p9NqRBqnXbgq6glcATdjQpRw1ctb3ZFrQSeAQejr8fabRegbvcxXPScfHcDxCwrL9YK/Y0qILdgwSnpNHfHhWl4ZbAW/O6LEgplHRC/mEtBfgClkhxraFbr7gAAAAASUVORK5CYII=);
+    mask: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANoAAAAkCAYAAADvhSSyAAAACXBIWXMAAAsTAAALEwEAmpwYAAABbUlEQVR4nO3d4U3CUBSG4beJA9QNcAJhAtnAOoGOwCaOoBvoCDgBOIHdQDbAH7cJMaHtxcJB6/skJ6Thptw/H+cSktOCn5kCc+AWKJtraaxqYA28A8/N9cktgE9ga1n/tBYcqDhw/QtQHfoh0gitgdkpbrzg/N8klvWbKruz5Xa0CbAi/R6TtDMjdbdOF5k3qzBk0j4VRwzazbC9SKN1nbMo9+j4QTo+SvpuA1z2LcoN2nbYXqRR681R7tFR0gAGTQpg0KQABk0KYNCkAAZNCmDQpAAGTQpg0KQABk0KYNCkAAZNCmDQpAAGTQpg0KQABk0KYNCkAAZNGq4kjTRolRM0x31L3Sb0TMLKCZqTiaVu9/QErW+oyAQHp0p9NqRBqnXbgq6glcATdjQpRw1ctb3ZFrQSeAQejr8fabRegbvcxXPScfHcDxCwrL9YK/Y0qILdgwSnpNHfHhWl4ZbAW/O6LEgplHRC/mEtBfgClkhxraFbr7gAAAAASUVORK5CYII=);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+}
+
+.tabs-bar-container .tabs-content-smooth .el-tabs__header .el-tabs__item.is-active, .tabs-bar-container .tabs-content-smooth .el-tabs__header .el-tabs__item.is-active:hover {
+    color: #1890ff;
+    background: rgba(24,144,255,.1);
+}
+
+.tabs-bar-container .tabs-content-smooth .el-tabs__header .el-tabs__item {
+    height: 38px;
+    padding: 0 30px 0 30px;
+    margin-top: 6px;
+    margin-right: -15px;
+    line-height: 38px;
+    border: 0;
+    transition: padding .3s cubic-bezier(.645,.045,.355,1)!important;
+}
+
+/*** smart end ***/
+
 </style>

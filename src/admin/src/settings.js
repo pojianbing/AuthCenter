@@ -14,6 +14,12 @@ module.exports = {
   tagsView: true,
 
   /**
+   * @type {string} card | smart | smooth
+   * @description Whether need tagsView
+   */
+  tagsStyle: 'smooth',
+
+  /**
    * @type {boolean} true | false
    * @description Whether fix the header
    */
