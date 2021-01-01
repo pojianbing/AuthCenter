@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
+using Volo.Abp.AuditLogging.Dtos;
 
 namespace Volo.Abp.AuditLogging
 {

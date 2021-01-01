@@ -6,6 +6,7 @@ using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Auditing;
 using Volo.Abp.Identity;
+using Volo.Abp.Identity.Dtos;
 
 namespace Volo.Abp.Identity
 {

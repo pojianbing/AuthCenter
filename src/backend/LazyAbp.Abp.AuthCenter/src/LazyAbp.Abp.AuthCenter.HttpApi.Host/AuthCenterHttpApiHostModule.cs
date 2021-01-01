@@ -37,8 +37,7 @@ namespace LazyAbp.Abp.AuthCenter
         typeof(AbpAspNetCoreMvcUiMultiTenancyModule),
         typeof(AuthCenterApplicationModule),
         typeof(AuthCenterEntityFrameworkCoreDbMigrationsModule),
-        typeof(AbpAspNetCoreSerilogModule),
-        typeof(IdentityServerAdminApplicationModule)
+        typeof(AbpAspNetCoreSerilogModule)
     )]
     public class AuthCenterHttpApiHostModule : AbpModule
     {

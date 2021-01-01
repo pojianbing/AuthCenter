@@ -2,6 +2,7 @@
 using System;
 using System.Threading.Tasks;
 using Volo.Abp.AspNetCore.Mvc;
+using Volo.Abp.Identity.Dtos;
 
 namespace Volo.Abp.Identity
 {

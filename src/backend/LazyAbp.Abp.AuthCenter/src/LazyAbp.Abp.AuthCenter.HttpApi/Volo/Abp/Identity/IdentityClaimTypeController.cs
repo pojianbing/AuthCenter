@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.AspNetCore.Mvc;
+using Volo.Abp.Identity.Dtos;
 
 namespace Volo.Abp.Identity
 {

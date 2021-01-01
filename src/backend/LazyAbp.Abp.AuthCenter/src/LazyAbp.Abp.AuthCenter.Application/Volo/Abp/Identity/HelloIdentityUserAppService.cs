@@ -8,6 +8,7 @@ using Volo.Abp.Application.Dtos;
 using System.Collections.Generic;
 using System.Linq;
 using LazyAbp.Abp.AuthCenter.Localization;
+using Volo.Abp.Identity.Dtos;
 
 namespace Volo.Abp.Identity
 {

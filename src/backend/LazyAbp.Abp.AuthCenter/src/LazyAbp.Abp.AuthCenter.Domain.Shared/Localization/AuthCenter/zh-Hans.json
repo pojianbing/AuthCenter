@@ -45,6 +45,10 @@
     "Feature:UserCount.Maximum": "允许的最大用户数量为{0}",
     "HelloAbp.QA:H0001": "H0001-错误1",
     "HelloAbp.QA:H0002": "H0002-错误2",
-    "Permission:AuditLogManagement": "审计日志"
+    "Permission:AuditLogManagement": "审计日志",
+    "Permission:IdentityServerAdmin": "Identity Server",
+    "Permission:ApiResource": "Api资源",
+    "Permission:IdentityResource": "Identity资源",
+    "Permission:Client": "客户"
   }
 }

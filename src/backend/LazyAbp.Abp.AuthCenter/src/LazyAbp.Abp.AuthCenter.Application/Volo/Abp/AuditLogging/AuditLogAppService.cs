@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.AuditLogging;
+using Volo.Abp.AuditLogging.Dtos;
 using Xhznl.HelloAbp;
 
 namespace Volo.Abp.AuditLogging
