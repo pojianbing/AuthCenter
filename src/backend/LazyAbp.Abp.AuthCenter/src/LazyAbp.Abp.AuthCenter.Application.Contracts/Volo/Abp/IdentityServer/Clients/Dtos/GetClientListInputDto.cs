@@ -7,5 +7,6 @@ namespace EasyAbp.IdentityServerAdmin.Clients.Dtos
 {
     public class GetClientListInputDto : PagedAndSortedResultRequestDto
     {
+        public string Keywords { get; set; }
     }
 }

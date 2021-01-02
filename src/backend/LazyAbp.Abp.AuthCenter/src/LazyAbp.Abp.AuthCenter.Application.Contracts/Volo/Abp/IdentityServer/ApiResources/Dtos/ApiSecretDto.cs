@@ -10,5 +10,6 @@ namespace EasyAbp.IdentityServerAdmin.ApiResources.Dtos
         public string Value { get; set; }
         public string Description { get; set; }
         public DateTime? Expiration { get; set; }
+        public bool IsNew { get; set; }
     }
 }

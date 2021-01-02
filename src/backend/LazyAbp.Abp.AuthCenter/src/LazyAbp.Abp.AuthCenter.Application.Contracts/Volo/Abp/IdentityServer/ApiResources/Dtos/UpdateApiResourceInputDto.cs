@@ -1,4 +1,5 @@
 ﻿using EasyAbp.IdentityServerAdmin.ApiResources.Dtos;
+using LazyAbp.Abp.AuthCenter.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,5 +15,19 @@ namespace EasyAbp.IdentityServerAdmin.ApiResources.Dtos
         public List<string> UserClaims { get; set; }
         public List<ApiSecretDto> Secrets { get; set; }
         public List<ApiScopeDto> Scopes { get; set; }
+
+        public void TryEncryptSecrets()
+        {
+            if (this.Secrets != null)
+            {
+                this.Secrets.ForEach(e =>
+                {
+                    if (e.IsNew && !e.Value.IsNullOrWhiteSpace())
+                    {
+                        e.Value = e.Value.Sha256();
+                    }
+                });
+            }
+        }
     }
 }

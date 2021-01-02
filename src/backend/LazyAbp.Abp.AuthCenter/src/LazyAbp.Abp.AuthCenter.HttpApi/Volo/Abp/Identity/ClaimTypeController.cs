@@ -14,11 +14,11 @@ namespace Volo.Abp.Identity
     [ControllerName("ClaimType")]
     [Route("api/identity/claim-types")]
 
-    public class IdentityClaimTypeController : AbpController, IIdentityClaimTypeAppService
+    public class ClaimTypeController : AbpController, IIdentityClaimTypeAppService
     {
         protected IIdentityClaimTypeAppService ClaimTypeAppService { get; }
 
-        public IdentityClaimTypeController(IIdentityClaimTypeAppService claimTypeAppService)
+        public ClaimTypeController(IIdentityClaimTypeAppService claimTypeAppService)
         {
             ClaimTypeAppService = claimTypeAppService;
         }

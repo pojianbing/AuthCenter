@@ -7,5 +7,6 @@ namespace EasyAbp.IdentityServerAdmin.IdentityResources.Dtos
 {
     public class GetIdentityResourceListInputDto : PagedAndSortedResultRequestDto
     {
+        public string Keywords { get; set; }
     }
 }

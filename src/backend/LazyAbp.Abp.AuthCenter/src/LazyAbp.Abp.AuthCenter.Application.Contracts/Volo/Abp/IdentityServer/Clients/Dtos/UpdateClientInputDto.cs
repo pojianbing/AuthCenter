@@ -1,6 +1,8 @@
-﻿using System;
+﻿using LazyAbp.Abp.AuthCenter.Extensions;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace EasyAbp.IdentityServerAdmin.Clients.Dtos
@@ -54,5 +56,19 @@ namespace EasyAbp.IdentityServerAdmin.Clients.Dtos
         public virtual string Description { get; set; }
 
         public virtual List<ClientClaimDto> Claims { get; set; }
+
+        public void TryEncryptSecrets()
+        {
+            if (this.ClientSecrets != null)
+            {
+                this.ClientSecrets.ForEach(e =>
+                {
+                    if (e.IsNew && !e.Value.IsNullOrWhiteSpace())
+                    {
+                        e.Value = e.Value.Sha256();
+                    }
+                });
+            }
+        }
     }
 }

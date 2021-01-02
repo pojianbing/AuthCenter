@@ -3,7 +3,7 @@ import router, { resetRouter } from '@/router'
 
 const baseListQuery = {
   page: 1,
-  limit: 20,
+  limit: 10,
   sort: undefined,
   filter: undefined
 }

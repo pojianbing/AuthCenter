@@ -89,6 +89,48 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/identity-server',
+    component: Layout,
+    redirect: '/identity-server/clients',
+    meta: {
+      title: 'HelloAbp["Menu:IdentityServer"]',
+      icon: 'id4',
+      policy: ''
+    },
+    children: [
+      {
+        path: 'template',
+        component: () => import('@/views/identity-server/template'),
+        name: 'Id4-template',
+        meta: { title: '模板'}
+      },
+      {
+        path: 'clients',
+        component: () => import('@/views/identity-server/clients'),
+        name: 'Id4-Clients',
+        meta: { title: 'HelloAbp["Menu:Clients"]'}
+      },
+      {
+        path: 'identityResource',
+        component: () => import('@/views/identity-server/identityResource'),
+        name: 'Id4-IdentityResource',
+        meta: { title: 'HelloAbp["Menu:IdentityResource"]'}
+      },
+      {
+        path: 'apiResource',
+        component: () => import('@/views/identity-server/apiResource'),
+        name: 'Id4-ApiResource',
+        meta: { title: 'HelloAbp["Menu:ApiResource"]'}
+      },
+      {
+        path: 'apiScopes',
+        component: () => import('@/views/identity-server/apiScopes'),
+        name: 'Id4-ApiScopes',
+        meta: { title: 'HelloAbp["Menu:ApiScopes"]'}
+      }
+    ]
+  },
   // {
   //   path: '/documentation',
   //   component: Layout,
