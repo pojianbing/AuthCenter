@@ -38,3 +38,11 @@ export function getClient(id) {
     method: 'get'
   })
 }
+
+export function searchConsts(type, text, limit) {
+  return request({
+    url: `/api/app/client/searchConsts`,
+    method: 'post',
+    data: { type, text, limit }
+  })
+}

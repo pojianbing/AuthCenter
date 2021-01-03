@@ -13,6 +13,9 @@ using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.IdentityServer.Clients;
+using LazyAbp.Abp.AuthCenter.Extensions;
+using LazyAbp.Abp.AuthCenter.IdentityServer;
+using LazyAbp.Abp.AuthCenter.Volo.Abp.IdentityServer.Clients.Dtos;
 
 namespace EasyAbp.IdentityServerAdmin.Clients
 {
@@ -21,9 +24,18 @@ namespace EasyAbp.IdentityServerAdmin.Clients
     {
         private readonly IClientRepository _repository;
 
-        public ClientAppService(IClientRepository repository) : base((IReadOnlyRepository<Client, Guid>)repository)
+        private readonly IRepository<SharedIdentityResource, Guid> _identityResourcesRepository;
+        private readonly IRepository<SharedApiScopes> _apiScopeRepository;
+
+        public ClientAppService(
+            IClientRepository repository,
+            IRepository<SharedIdentityResource, Guid> identityResourcesRepository,
+            IRepository<SharedApiScopes> apiScopeRepository
+            ) : base((IReadOnlyRepository<Client, Guid>)repository)
         {
             _repository = repository;
+            _identityResourcesRepository = identityResourcesRepository;
+            _apiScopeRepository = apiScopeRepository;
         }
 
         protected override IQueryable<Client> CreateFilteredQuery(GetClientListInputDto input)
@@ -121,6 +133,58 @@ namespace EasyAbp.IdentityServerAdmin.Clients
             var client = await _repository.FindAsync(id);
 
             await _repository.DeleteAsync(client);
+        }
+
+        public List<string> SearchConsts(SearchConstsInputDto input)
+        {
+            switch (input.Type)
+            {
+                case "scope":
+                    return SearchScopes(input.Text, input.Limit);
+                case "claim":
+                    return SearchClaims(input.Text, input.Limit);
+                case "grantType":
+                    return SearchGrantTypes(input.Text, input.Limit);
+                default:
+                    return new List<string>();
+            }
+        }
+
+        private List<string> SearchScopes(string scope, int limit = 0)
+        {
+            var identityResources = _identityResourcesRepository
+                .WhereIf(!string.IsNullOrEmpty(scope), x => x.Name.Contains(scope))
+                .TakeIf(x => x.Id, limit > 0, limit)
+                .Select(x => x.Name).ToList();
+
+            var apiScopes = _apiScopeRepository
+                .WhereIf(!string.IsNullOrEmpty(scope), x => x.Name.Contains(scope))
+                .TakeIf(x => x.ApiResourceId, limit > 0, limit)
+                .Select(x => x.Name).ToList();
+
+            var scopes = identityResources.Concat(apiScopes).TakeIf(x => x, limit > 0, limit).ToList();
+
+            return scopes;
+        }
+
+        private List<string> SearchClaims(string claim, int limit = 0)
+        {
+            var filteredClaims = LazyAbp.Abp.AuthCenter.Volo.Abp.IdentityServer.Clients.ClientConsts.GetStandardClaims()
+               .WhereIf(!string.IsNullOrWhiteSpace(claim), x => x.Contains(claim))
+               .TakeIf(x => x, limit > 0, limit)
+               .ToList();
+
+            return filteredClaims;
+        }
+
+        private List<string> SearchGrantTypes(string grant, int limit = 0)
+        {
+            var filteredGrants = LazyAbp.Abp.AuthCenter.Volo.Abp.IdentityServer.Clients.ClientConsts.GetGrantTypes()
+                .WhereIf(!string.IsNullOrWhiteSpace(grant), x => x.Contains(grant))
+                .TakeIf(x => x, limit > 0, limit)
+                .ToList();
+
+            return filteredGrants;
         }
 
         private void ConfigureClient(Client client, ClientType clientType)

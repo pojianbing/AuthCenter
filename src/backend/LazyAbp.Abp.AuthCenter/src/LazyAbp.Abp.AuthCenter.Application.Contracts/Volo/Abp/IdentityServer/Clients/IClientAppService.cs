@@ -1,4 +1,5 @@
 ﻿using EasyAbp.IdentityServerAdmin.Clients.Dtos;
+using LazyAbp.Abp.AuthCenter.Volo.Abp.IdentityServer.Clients.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,5 +13,6 @@ namespace EasyAbp.IdentityServerAdmin.Clients
         Task<ClientDto> CreateAsync(CreateClientInputDto input);
         Task<ClientDto> UpdateAsync(Guid id, UpdateClientInputDto input);
         Task DeleteAsync(Guid id);
+        List<string> SearchConsts(SearchConstsInputDto input);
     }
 }

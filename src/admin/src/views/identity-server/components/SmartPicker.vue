@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import { searchConsts } from '@/api/identity-server/client'
 
 const config = {
   'default': { remote: false, type: 1 },
@@ -58,6 +59,11 @@ export default {
         options: []
       }
     }
+  },
+  mounted() {
+    searchConsts('scope', 'code', 1)
+    searchConsts('claim', 'code', 1)
+    searchConsts('grantType', 'code', 1)
   }
 }
 </script>
