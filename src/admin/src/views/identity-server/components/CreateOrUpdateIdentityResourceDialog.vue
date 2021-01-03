@@ -3,7 +3,7 @@
     custom-class="custom"
     :close-on-click-modal="false"
     title="创建"
-    widht="720"
+    width="880px"
     :visible.sync="dialogVisible">
     <el-form ref="form" :model="form" :rules="rules" label-width="100px" size="small">
         <el-form-item label="名称" prop="name">

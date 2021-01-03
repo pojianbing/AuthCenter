@@ -83,7 +83,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'dashboard',
-        component: () => import('@/views/dashboard/index'),
+        component: () => import('@/views/icons/index'),
         name: 'Dashboard',
         meta: { title: 'HelloAbp["Menu:Dashboard"]', icon: 'home', affix: true }
       }

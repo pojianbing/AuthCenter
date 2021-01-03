@@ -1,44 +1,115 @@
 <template>
-  <el-dialog     
+  <el-dialog 
+    custom-class="custom"
     title="更新"
-    widht="720"
+    width="880px"
     :close-on-click-modal="false"
     :visible.sync="dialogVisible">
-    <el-form ref="form" :model="form" label-width="180px" size="small">
+    <el-form ref="form" :model="form" label-width="190px" size="small">
         <el-tabs type="border-card">
-            <el-tab-pane label="Basic">
-                <el-form-item label="客户端名称">
+            <el-tab-pane label="名称">
+                <el-form-item>
+                    <span slot="label">
+                        客户端标识 
+                        <el-tooltip content="客户端的唯一标识" placement="top">
+                            <i class="el-alert__icon el-icon-info"></i>
+                        </el-tooltip>
+                    </span>
+                    <el-input v-model="form.clientId"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <span slot="label">
+                        客户端名称 
+                        <el-tooltip content="客户端显示名称（用于记录和同意屏幕）" placement="top">
+                            <i class="el-alert__icon el-icon-info"></i>
+                        </el-tooltip>
+                    </span>
                     <el-input v-model="form.clientName"></el-input>
                 </el-form-item>
-                <el-form-item label="描述">
-                    <el-input type="textarea" v-model="form.description"></el-input>
-                </el-form-item>
-                <el-form-item label="客户 Uri">
-                    <el-input v-model="form.clientUri"></el-input>
-                </el-form-item>
-                <el-form-item label="Logo Uri">
-                    <el-input v-model="form.logoUri"></el-input>
-                </el-form-item>
-                <el-form-item label="Allowed Cors Origins">
-                    <el-select style="width: 100%"
-                        v-model="form.allowedCorsOrigins"
-                        multiple
-                        filterable
-                        allow-create
-                        default-first-option
-                        placeholder="Add Allowed Cors Origins">
-                        <el-option
-                            v-for="item in form.allowedCorsOrigins"
-                            :key="item"
-                            :label="item"
-                            :value="item">
-                        </el-option>
-                    </el-select>
+                <el-form-item>
+                    <span slot="label">
+                        测试 
+                        <el-tooltip content="默认情况下，客户端无权访问任何资源 - 通过添加相应的作用域名称来指定允许的资源" placement="top">
+                            <i class="el-alert__icon el-icon-info"></i>
+                        </el-tooltip>
+                    </span>
+                    <SmartPicker></SmartPicker>
                 </el-form-item>
             </el-tab-pane>
-            <el-tab-pane label="Settings">
-                <el-form-item label="Enabled">
-                    <el-checkbox v-model="form.enabled" label="是"></el-checkbox>
+            <el-tab-pane label="基本">
+                <el-form-item>
+                    <span slot="label">
+                        启用 
+                        <el-tooltip content="指定是否启用客户端。 默认为 true。" placement="top">
+                            <i class="el-alert__icon el-icon-info"></i>
+                        </el-tooltip>
+                    </span>
+                    <el-switch v-model="form.enabled"></el-switch>
+                </el-form-item>
+                <el-form-item>
+                    <span slot="label">
+                        客户端描述 
+                        <el-tooltip content="客户端描述" placement="top">
+                            <i class="el-alert__icon el-icon-info"></i>
+                        </el-tooltip>
+                    </span>
+                    <el-input type="textarea" v-model="form.description"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <span slot="label">
+                        协议类型 
+                        <el-tooltip content="默认为 OpenID Connect 协议" placement="top">
+                            <i class="el-alert__icon el-icon-info"></i>
+                        </el-tooltip>
+                    </span>
+                    <el-select v-model="form.protocolType" style="width:100%">
+                        <el-option label="OpenID Connect" value="oidc"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <span slot="label">
+                        需要客户端密钥 
+                        <el-tooltip content="指定此客户端是否需要密钥才能从令牌端点请求令牌（默认为 true）" placement="top">
+                            <i class="el-alert__icon el-icon-info"></i>
+                        </el-tooltip>
+                    </span>
+                    <el-switch v-model="form.requireClientSecret"></el-switch>
+                </el-form-item>
+                <el-form-item>
+                    <span slot="label">
+                        需要 Pkce 
+                        <el-tooltip content="指定使用基于授权代码的授权类型的客户端是否必须发送校验密钥" placement="top">
+                            <i class="el-alert__icon el-icon-info"></i>
+                        </el-tooltip>
+                    </span>
+                    <el-switch v-model="form.requirePkce"></el-switch>
+                </el-form-item>
+                <el-form-item>
+                    <span slot="label">
+                        允许纯文本 Pkce 
+                        <el-tooltip content="指定使用 PKCE 的客户端是否可以使用纯文本代码质询（不推荐 - 默认为 false）" placement="top">
+                            <i class="el-alert__icon el-icon-info"></i>
+                        </el-tooltip>
+                    </span>
+                    <el-switch v-model="form.allowPlainTextPkce"></el-switch>
+                </el-form-item>
+                <el-form-item>
+                    <span slot="label">
+                        允许离线访问
+                        <el-tooltip content="指定此客户端是否可以请求刷新令牌（请求 offline_access 作用域）" placement="top">
+                            <i class="el-alert__icon el-icon-info"></i>
+                        </el-tooltip>
+                    </span>
+                    <el-switch v-model="form.allowOfflineAccess"></el-switch>
+                </el-form-item>
+                <el-form-item>
+                    <span slot="label">
+                        允许通过浏览器访问令牌 
+                        <el-tooltip content="指定是否允许此客户端通过浏览器接收访问令牌 access_token。 这对于强化允许多种响应类型的流是有用的（例如，通过禁止应该使用代码身份令牌 id_token 的混合流客户端来添加令牌响应类型并因此将令牌泄漏到浏览器。）" placement="top">
+                            <i class="el-alert__icon el-icon-info"></i>
+                        </el-tooltip>
+                    </span>
+                    <el-switch v-model="form.allowAccessTokensViaBrowser"></el-switch>
                 </el-form-item>
                 <el-form-item label="Allowed Scopes">
                     <el-select style="width: 100%"
@@ -50,22 +121,6 @@
                         placeholder="Add Scope">
                         <el-option
                             v-for="item in form.allowedScopes"
-                            :key="item"
-                            :label="item"
-                            :value="item">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="Redirect Uri's">
-                    <el-select style="width: 100%"
-                        v-model="form.redirectUris"
-                        multiple
-                        filterable
-                        allow-create
-                        default-first-option
-                        placeholder="Add Url">
-                        <el-option
-                            v-for="item in form.redirectUris"
                             :key="item"
                             :label="item"
                             :value="item">
@@ -96,26 +151,54 @@
                         {{item}} <i class="el-icon-circle-plus-outline"/>
                    </el-tag>
                 </el-form-item>
+            </el-tab-pane>
+            <el-tab-pane label="Basic">
+                <el-form-item label="客户 Uri">
+                    <el-input v-model="form.clientUri"></el-input>
+                </el-form-item>
+                <el-form-item label="Logo Uri">
+                    <el-input v-model="form.logoUri"></el-input>
+                </el-form-item>
+                <el-form-item label="Allowed Cors Origins">
+                    <el-select style="width: 100%"
+                        v-model="form.allowedCorsOrigins"
+                        multiple
+                        filterable
+                        allow-create
+                        default-first-option
+                        placeholder="Add Allowed Cors Origins">
+                        <el-option
+                            v-for="item in form.allowedCorsOrigins"
+                            :key="item"
+                            :label="item"
+                            :value="item">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </el-tab-pane>
+            <el-tab-pane label="Settings">
+
+                <el-form-item label="Redirect Uri's">
+                    <el-select style="width: 100%"
+                        v-model="form.redirectUris"
+                        multiple
+                        filterable
+                        allow-create
+                        default-first-option
+                        placeholder="Add Url">
+                        <el-option
+                            v-for="item in form.redirectUris"
+                            :key="item"
+                            :label="item"
+                            :value="item">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item label="Require Consent Screen">
                     <el-checkbox v-model="form.requireConsent" label="是"></el-checkbox>
                 </el-form-item>
                 <el-form-item label="Remember Consent">
                     <el-checkbox v-model="form.allowRememberConsent" label="是"></el-checkbox>
-                </el-form-item>
-                <el-form-item label="Allow Offline Access">
-                    <el-checkbox v-model="form.allowOfflineAccess" label="是"></el-checkbox>
-                </el-form-item>
-                <el-form-item label="Require Client Secret">
-                    <el-checkbox v-model="form.requireClientSecret" label="是"></el-checkbox>
-                </el-form-item>
-                <el-form-item label="Require Pkce">
-                    <el-checkbox v-model="form.requirePkce" label="是"></el-checkbox>
-                </el-form-item>
-                <el-form-item label="Allow Plain Text Pkce">
-                    <el-checkbox v-model="form.allowPlainTextPkce" label="是"></el-checkbox>
-                </el-form-item>
-                <el-form-item label="Allow Access Token Via Browser">
-                    <el-checkbox v-model="form.allowAccessTokensViaBrowser" label="是"></el-checkbox>
                 </el-form-item>
             </el-tab-pane>
             <el-tab-pane label="Secrets">
@@ -257,6 +340,7 @@ import {
 import SecretEditor from './SecretEditor'
 import ClientClaimsEditor from './ClientClaimsEditor'
 import ClientPropertyEditor from './ClientPropertyEditor'
+import SmartPicker from './SmartPicker'
 
 const defaultGrantTypes = [
     'authorization_code', 
@@ -275,7 +359,7 @@ const defaultClientSecret = {
 }
 
 export default {
-    components: { SecretEditor, ClientClaimsEditor, ClientPropertyEditor },
+    components: { SecretEditor, ClientClaimsEditor, ClientPropertyEditor, SmartPicker },
     data(){
         return {
             form: {

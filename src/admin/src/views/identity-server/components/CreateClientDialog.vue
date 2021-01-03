@@ -3,36 +3,30 @@
     custom-class="custom"
     :close-on-click-modal="false"
     title="创建"
-    widht="720"
+    width="880px"
     :visible.sync="dialogVisible">
-    <el-form ref="form" :model="form" :rules="rules" label-width="100px" size="small">
-        <el-form-item label="客户端Id" prop="clientId">
+    <el-form ref="form" :model="form" :rules="rules" label-width="120px" size="small">
+        <el-form-item label="客户端标识" prop="clientId">
+            <span slot="label">
+                客户端标识 
+                <el-tooltip content="客户端的唯一标识" placement="top">
+                    <i class="el-alert__icon el-icon-info"></i>
+                </el-tooltip>
+            </span>
             <el-input v-model="form.clientId"></el-input>
         </el-form-item>
         <el-form-item label="客户端名称" prop="clientName">
+            <span slot="label">
+                客户端名称 
+                <el-tooltip content="客户端显示名称（用于记录和同意屏幕）" placement="top">
+                    <i class="el-alert__icon el-icon-info"></i>
+                </el-tooltip>
+            </span>
             <el-input v-model="form.clientName"></el-input>
         </el-form-item>
-        <el-form-item label="客户 Uri">
-            <el-input v-model="form.clientUri"></el-input>
-        </el-form-item>
-        <el-form-item label="Logo Uri">
-            <el-input v-model="form.logoUri"></el-input>
-        </el-form-item>
-        <el-form-item label="描述">
-            <el-input type="textarea" v-model="form.description"></el-input>
-        </el-form-item>
-        <el-form-item label="客户端类型">
-            <el-radio-group v-model="form.clientType" class="multiline">
-                <el-radio :label="0">Empty</el-radio>
-                <el-radio :label="1">Device</el-radio>
-                <el-radio :label="2">WebServerSideRenderer</el-radio>
-                <el-radio :label="3">Spa</el-radio>
-                <el-radio :label="4">WebHybrid</el-radio>
-                <el-radio :label="5">Native</el-radio>
-                <el-radio :label="6">Machine</el-radio>
-            </el-radio-group>
-        </el-form-item>
-     </el-form>
+        <ClientTypeSelector v-model="form.clientType"></ClientTypeSelector>
+    </el-form>
+
     <div slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false" size="small">取 消</el-button>
         <el-button type="primary" @click="handleSubmit" size="small">保 存</el-button>
@@ -42,6 +36,7 @@
 
 <script>
 import { createClient } from '@/api/identity-server/client'
+import ClientTypeSelector from './ClientTypeSelector'
 import _ from 'lodash'
 
 const defaultForm = {
@@ -54,6 +49,7 @@ const defaultForm = {
 }
 
 export default {
+    components: { ClientTypeSelector },
     data(){
         return {
             form: _.cloneDeep(defaultForm),
