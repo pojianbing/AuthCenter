@@ -1,51 +1,47 @@
 <template>
   <el-card shadow="never" class="picker">
       <!-- 输入框 -->
-      <el-input placeholder="输入2个以上字符"></el-input>
+      <el-input placeholder="输入2个以上字符" v-model="searchText" @input="handleSearch"></el-input>
 
       <!-- 搜索结果 -->
-      <el-divider></el-divider>
-      <div class="search-title">搜索结果:(点击选择)</div>
-      <div class="search-result">
-        <el-button type="primary">主要按钮</el-button>
-        <el-button type="primary">主要按钮</el-button>
-        <el-button type="primary">主要按钮</el-button>
-        <el-button type="primary">主要按钮</el-button>
-        <el-button type="primary">主要按钮</el-button>
-        <el-button type="primary">主要按钮</el-button>
-        <el-button type="primary">主要按钮</el-button>
-        <el-button type="primary">主要按钮</el-button>
-        <el-button type="primary">主要按钮</el-button>
-      </div>
+      <template v-if="searchItems.length !== 0">
+        <el-divider></el-divider>
+        <div class="search-title">搜索结果:(点击选择)</div>
+        <div class="search-result">
+          <el-button type="primary" v-for="(item, index) in searchItems" :key="index" @click="handleSelectSearchItem(item)">{{ item }}</el-button>
+        </div>
+      </template>
 
       <!-- 选中项 -->
       <el-divider></el-divider>
-      <div class="search-title">选中项:</div>
-      <div class="selected-result">
-        <div>
-          <el-button type="primary" plain>code</el-button>
-          <el-button type="success" icon="el-icon-edit" circle plain></el-button>
-          <el-button type="danger" icon="el-icon-delete" circle plain></el-button>
+      <template v-if="selectedItems.length === 0">
+        <div class="search-title">没有选中项</div>
+      </template>
+      <template v-else>
+        <div class="search-title">选中项:</div>
+        <div class="selected-result">
+          <div v-for="(item, index) in selectedItems" :key="index">
+            <el-button type="primary" plain>{{ item }}</el-button>
+            <el-button type="success" icon="el-icon-edit" circle plain @click="handleUpdateSelectedItem(item, index)"></el-button>
+            <el-button type="danger" icon="el-icon-delete" circle plain @click="handleDeleteSelectedItem(index)"></el-button>
+          </div>
         </div>
-        <div>
-          <el-button type="primary" plain>code</el-button>
-          <el-button type="success" icon="el-icon-edit" circle plain></el-button>
-          <el-button type="danger" icon="el-icon-delete" circle plain></el-button>
-        </div>
-      </div>
+      </template>
 
       <!-- 建议项 -->
-      <el-divider></el-divider>
-      <div class="search-title">建议项:</div>
-      <div class="suggest-result">
-        <el-button>主要按钮</el-button>
-      </div>
-
+      <template v-if="suggestItems.length !== 0">
+        <el-divider></el-divider>
+        <div class="search-title">建议项:</div>
+        <div class="suggest-result">
+          <el-button v-for="(item, index) in suggestItems" :key="index">{{ item }}</el-button>
+        </div>
+      </template>
   </el-card>
 </template>
 
 <script>
 import { searchConsts } from '@/api/identity-server/client'
+import { debounce } from '@/utils'
 
 const config = {
   'default': { remote: false, type: 1 },
@@ -54,16 +50,86 @@ const config = {
 export default {
   data(){
     return {
-      data: {
-        selected: [],
-        options: []
-      }
+      searchItems: [],
+      selectedItems: [],
+      suggestItems: [],
+      searchText: ''
     }
   },
   mounted() {
     searchConsts('scope', 'code', 1)
     searchConsts('claim', 'code', 1)
     searchConsts('grantType', 'code', 1)
+  },
+  created() {
+    this.$_searchHandler = debounce(() => {
+      // 输入为空，清空搜索结果
+      if(!this.searchText) {
+        this.clearSearchResult()
+        return
+      }
+      // 2个字符以上，则搜索
+      if(this.searchText.length >= 2){
+        this.search(this.searchText).then(res => {
+          this.searchItems = res
+        })
+      }
+    }, 600)
+  },
+  methods: {
+    handleSearch(){
+      this.$_searchHandler()
+    },
+    handleSelectSearchItem(item){
+      if(this.existInSelectedItems(item, -1)){
+        this.$message({
+          message: `${item} 项已被选中`,
+          type: 'error'
+        })
+        return
+      }
+
+      this.selectedItems.push(item)
+      this.clearSearchResult()
+      this.clearSearchText()
+    },
+    handleDeleteSelectedItem(index){
+      this.selectedItems.splice(index,1)
+    },
+    handleUpdateSelectedItem(item, index){
+      var self = this
+
+       this.$prompt('', item, {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        }).then(({ value }) => {
+          if(self.existInSelectedItems(value, index)) {
+            this.$message({
+              message: `${value}已存在`,
+              type: 'error'
+            })
+            return
+          }
+
+          this.$set(this.selectedItems, index, value)
+        }).catch(() => {});
+    },
+    search(searchText){
+      // todo 分为远程和本地搜索
+
+      return new Promise((resolve, reject) => {
+        resolve([searchText])
+      })
+    },
+    clearSearchResult(){
+      this.searchItems = []
+    },
+    clearSearchText(){
+      this.searchText = ''
+    },
+    existInSelectedItems(item, index){
+      return this.selectedItems.some((e, idx) => idx !== index && e === item)
+    }
   }
 }
 </script>
