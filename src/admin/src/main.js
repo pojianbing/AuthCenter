@@ -24,6 +24,10 @@ import * as filters from './filters' // global filters
 import VueParticles from 'vue-particles'
 Vue.use(VueParticles)
 
+import 'vue-loaders/dist/vue-loaders.css';
+import VueLoaders from 'vue-loaders';
+Vue.use(VueLoaders);
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

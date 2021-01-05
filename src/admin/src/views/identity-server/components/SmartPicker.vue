@@ -11,9 +11,7 @@
           <el-button type="primary" v-for="(item, index) in searchItems" :key="index" @click="handleSelectSearchItem(item)">{{ item }}</el-button>
         </div>
       </template>
-      <div class="loadingArea">
-aa
-      </div>
+      <vue-loaders-line-scale color="#3cb371" scale="0.5" v-if="loading"/> 
 
       <!-- 选中项 -->
       <el-divider></el-divider>
@@ -53,8 +51,14 @@ export default {
       isRequired: false,
       default(){
         return ''
-      },
-      searchingLoading: true
+      }
+    },
+    value:{
+      type: Array,
+      isRequired: true,
+      default(){
+        return []
+      }
     }
   },
   data(){
@@ -62,7 +66,8 @@ export default {
       searchItems: [],
       selectedItems: [],
       suggestItems: [],
-      searchText: ''
+      searchText: '',
+      loading: false
     }
   },
   computed: {
@@ -72,9 +77,7 @@ export default {
     }
   },
   mounted() {
-    searchConsts('scope', 'code', 1)
-    searchConsts('claim', 'code', 1)
-    searchConsts('grantType', 'code', 1)
+
   },
   created() {
     this.$_searchHandler = debounce(() => {
@@ -85,15 +88,11 @@ export default {
       }
       // 2个字符以上，则搜索
       if(this.searchText.length >= 2){
-        this.$loading({
-          text: 'Loading',
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.7)',
-          target: 'loadingArea'
-        })
-
+        this.loading = true
         this.search(this.searchText).then(res => {
           this.searchItems = res
+        }).finally(()=>{
+          this.loading = false
         })
       }
     }, 600)
@@ -163,6 +162,17 @@ export default {
     existInSelectedItems(item, index){
       return this.selectedItems.some((e, idx) => idx !== index && e === item)
     }
+  },
+  watch: {
+    selectedItems(){
+      this.$emit('input', [...this.selectedItems])
+    },
+    value: {
+        handler(newval, old){
+            this.selectedItems = [...newval]
+        },
+        immediate: true
+    }
   }
 }
 </script>
@@ -189,9 +199,4 @@ export default {
   .picker .suggest-result .el-button{
     border: none;
   }
-
-  .loadingArea{
-    width: 100%;height: 30px;
-  }
-
 </style>
