@@ -33,7 +33,7 @@
                             <i class="el-alert__icon el-icon-info"></i>
                         </el-tooltip>
                     </span>
-                    <SmartPicker></SmartPicker>
+                    <SmartPicker type="claim"></SmartPicker>
                 </el-form-item>
             </el-tab-pane>
             <el-tab-pane label="基本">

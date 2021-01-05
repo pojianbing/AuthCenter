@@ -11,6 +11,9 @@
           <el-button type="primary" v-for="(item, index) in searchItems" :key="index" @click="handleSelectSearchItem(item)">{{ item }}</el-button>
         </div>
       </template>
+      <div class="loadingArea">
+aa
+      </div>
 
       <!-- 选中项 -->
       <el-divider></el-divider>
@@ -43,17 +46,29 @@
 import { searchConsts } from '@/api/identity-server/client'
 import { debounce } from '@/utils'
 
-const config = {
-  'default': { remote: false, type: 1 },
-}
-
 export default {
+  props:{
+    type: {
+      type: String,
+      isRequired: false,
+      default(){
+        return ''
+      },
+      searchingLoading: true
+    }
+  },
   data(){
     return {
       searchItems: [],
       selectedItems: [],
       suggestItems: [],
       searchText: ''
+    }
+  },
+  computed: {
+    // 是否需要调用远程接口
+    isRemote(){
+      return !!this.type
     }
   },
   mounted() {
@@ -70,6 +85,13 @@ export default {
       }
       // 2个字符以上，则搜索
       if(this.searchText.length >= 2){
+        this.$loading({
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)',
+          target: 'loadingArea'
+        })
+
         this.search(this.searchText).then(res => {
           this.searchItems = res
         })
@@ -115,11 +137,22 @@ export default {
         }).catch(() => {});
     },
     search(searchText){
-      // todo 分为远程和本地搜索
-
-      return new Promise((resolve, reject) => {
-        resolve([searchText])
-      })
+      if(this.isRemote){
+        return new Promise((resolve, reject) => {
+          searchConsts(this.type, searchText).then(res => {
+            var exist = res.some(e=> e === searchText)
+            if(exist){
+              resolve([...res])
+            } else {
+              resolve([...res, searchText])
+            }
+          })
+        })
+      } else {
+        return new Promise((resolve, reject) => {
+          resolve([searchText])
+        })
+      }
     },
     clearSearchResult(){
       this.searchItems = []
@@ -155,6 +188,10 @@ export default {
 
   .picker .suggest-result .el-button{
     border: none;
+  }
+
+  .loadingArea{
+    width: 100%;height: 30px;
   }
 
 </style>
