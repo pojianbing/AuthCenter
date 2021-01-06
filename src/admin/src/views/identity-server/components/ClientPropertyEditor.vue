@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <el-card shadow="never">
         <el-row align="middle" justify="center" type="flex">
             <el-col :span="3" class="fieldName">键</el-col>
             <el-col :span="7" :offset="1" class="fieldValue">
@@ -15,7 +15,7 @@
             <el-col :span="1" ></el-col>
         </el-row>
 
-         <el-table :data="clientPropertys" style="width: 100%;margin-top:20px">
+         <el-table :data="clientPropertys" style="width: 100%;margin-top:20px" border>
             <el-table-column prop="key" label="类型"></el-table-column>
             <el-table-column prop="value" label="值"></el-table-column>
             <el-table-column
@@ -27,7 +27,7 @@
                 </template>
             </el-table-column>
         </el-table>
-    </div>
+    </el-card>
 </template>
 
 <script>

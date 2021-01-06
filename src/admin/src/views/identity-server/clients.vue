@@ -88,7 +88,6 @@
           </div>
       </div>
       <CreateClientDialog ref="createClientDialog" @success="handleCreateSuccess"></CreateClientDialog>
-      <UpdateClientDialog ref="updateClientDialog" @success="handleUpdateSuccess"></UpdateClientDialog>
   </el-card>
 </template>
 
@@ -99,10 +98,9 @@ import {
 import baseListQuery from '@/utils/abp'
 import Pagination from '@/components/Pagination'
 import CreateClientDialog from './components/CreateClientDialog'
-import UpdateClientDialog from './components/UpdateClientDialog'
 
 export default {
-    components: { Pagination, CreateClientDialog, UpdateClientDialog },
+    components: { Pagination, CreateClientDialog },
     data() {
     return {
       tableKey: 0,
@@ -149,10 +147,10 @@ export default {
       }).catch(()=>{})
     },
     handleUpdate(id){
-      this.$refs.updateClientDialog.showDialog(id)
-    },
-    handleUpdateSuccess(){
-      this.getList()
+      this.$router.push({
+        name: 'Id4-ClientEditor',
+        query:{ id }
+      })
     },
     getList() {
       this.listLoading = true

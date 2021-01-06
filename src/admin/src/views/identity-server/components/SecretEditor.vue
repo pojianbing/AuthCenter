@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <el-card shadow="never">
         <el-row align="middle" justify="center" type="flex">
             <el-col :span="3" class="fieldName">类型</el-col>
             <el-col :span="7" :offset="1" class="fieldValue">
@@ -31,9 +31,9 @@
             <el-col :span="1" ></el-col>
         </el-row>
 
-         <el-table :data="clientSecrets" style="width: 100%;margin-top:20px">
+         <el-table :data="clientSecrets" style="width: 100%;margin-top:20px" border>
             <el-table-column prop="type" label="类型"></el-table-column>
-            <el-table-column prop="value" label="值"></el-table-column>
+            <el-table-column prop="value" label="值 （保存后，sha256）"></el-table-column>
             <el-table-column prop="description" label="描述"></el-table-column>
             <el-table-column prop="expiration" label="过期">
                 <template slot-scope="{ row }">
@@ -49,7 +49,7 @@
                 </template>
             </el-table-column>
         </el-table>
-    </div>
+    </el-card>
 </template>
 
 <script>

@@ -112,6 +112,13 @@ export const constantRoutes = [
         meta: { title: 'HelloAbp["Menu:Clients"]'}
       },
       {
+        path: 'clients/update',
+        component: () => import('@/views/identity-server/clientEditor'),
+        hidden: true,
+        name: 'Id4-ClientEditor',
+        meta: { title: '客户端编辑'}
+      },
+      {
         path: 'identityResource',
         component: () => import('@/views/identity-server/identityResource'),
         name: 'Id4-IdentityResource',

@@ -34,7 +34,8 @@
         <el-divider></el-divider>
         <div class="search-title">建议项:</div>
         <div class="suggest-result">
-          <el-button v-for="(item, index) in suggestItems" :key="index">{{ item }}</el-button>
+          <el-button v-for="(item, index) in suggestItems" :key="index" @click="handleSelectSuggetItem(item)" class="suggestion">{{ item }}</el-button>
+          <el-button icon="el-icon-plus" @click="handleLoadMoreSugget" v-if="!loadMore">更多</el-button>
         </div>
       </template>
   </el-card>
@@ -67,7 +68,18 @@ export default {
       selectedItems: [],
       suggestItems: [],
       searchText: '',
-      loading: false
+      loading: false,
+      loadMore: false
+    }
+  },
+  watch: {
+    value: {
+        handler(newval, old){
+            newval = newval || []
+            this.selectedItems = [...newval]
+            console.log('')
+        },
+        immediate: true
     }
   },
   computed: {
@@ -77,7 +89,9 @@ export default {
     }
   },
   mounted() {
-
+    if(this.isRemote){
+      this.loadSuggest()
+    }
   },
   created() {
     this.$_searchHandler = debounce(() => {
@@ -102,20 +116,19 @@ export default {
       this.$_searchHandler()
     },
     handleSelectSearchItem(item){
-      if(this.existInSelectedItems(item, -1)){
-        this.$message({
-          message: `${item} 项已被选中`,
-          type: 'error'
-        })
-        return
-      }
-
-      this.selectedItems.push(item)
+      this.trySelectItem(item)
       this.clearSearchResult()
       this.clearSearchText()
     },
+    handleSelectSuggetItem(item){
+      this.trySelectItem(item)
+    },
+    handleLoadMoreSugget(){
+      this.loadMoreSugget()
+    },
     handleDeleteSelectedItem(index){
       this.selectedItems.splice(index,1)
+      this.$emit('input', [...this.selectedItems])
     },
     handleUpdateSelectedItem(item, index){
       var self = this
@@ -133,6 +146,7 @@ export default {
           }
 
           this.$set(this.selectedItems, index, value)
+          this.$emit('input', [...this.selectedItems])
         }).catch(() => {});
     },
     search(searchText){
@@ -153,6 +167,18 @@ export default {
         })
       }
     },
+    trySelectItem(item){
+      if(this.existInSelectedItems(item, -1)){
+        this.$message({
+          message: `${item} 项已被选中`,
+          type: 'error'
+        })
+        return
+      }
+
+      this.selectedItems.push(item)
+      this.$emit('input', [...this.selectedItems])
+    },
     clearSearchResult(){
       this.searchItems = []
     },
@@ -161,17 +187,17 @@ export default {
     },
     existInSelectedItems(item, index){
       return this.selectedItems.some((e, idx) => idx !== index && e === item)
-    }
-  },
-  watch: {
-    selectedItems(){
-      this.$emit('input', [...this.selectedItems])
     },
-    value: {
-        handler(newval, old){
-            this.selectedItems = [...newval]
-        },
-        immediate: true
+    loadSuggest(){
+      searchConsts(this.type, '', 5).then(res => {
+        this.suggestItems = res
+      })
+    },
+    loadMoreSugget(){
+      this.loadMore = true
+      searchConsts(this.type, '').then(res => {
+        this.suggestItems = res
+      })
     }
   }
 }
@@ -196,7 +222,8 @@ export default {
     margin-top: 5px;
   }
 
-  .picker .suggest-result .el-button{
+  .picker .suggest-result .suggestion{
     border: none;
   }
+
 </style>
