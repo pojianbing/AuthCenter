@@ -6,17 +6,50 @@
     width="880px"
     :visible.sync="dialogVisible">
     <el-form ref="form" :model="form" :rules="rules" label-width="100px" size="small">
-        <el-form-item label="名称" prop="name">
+        <el-form-item>
+            <span slot="label">
+                名称 
+                <el-tooltip content="API 的唯一名称。 此值用于自我认证，并将添加到传给受众的访问令牌 access_token 中。" placement="top">
+                    <i class="el-alert__icon el-icon-info"></i>
+                </el-tooltip>
+            </span>
             <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item label="显示名称" prop="displayName">
+        <el-form-item>
+            <span slot="label">
+                显示名称 
+                <el-tooltip content="该值可以用于例如 在同意屏幕上。" placement="top">
+                    <i class="el-alert__icon el-icon-info"></i>
+                </el-tooltip>
+            </span>
             <el-input v-model="form.displayName"></el-input>
         </el-form-item>
-        <el-form-item label="描述">
-            <el-input v-model="form.description"></el-input>
+        <el-form-item>
+            <span slot="label">
+                描述 
+                <el-tooltip content="该值可以用于例如 在同意屏幕上。" placement="top">
+                    <i class="el-alert__icon el-icon-info"></i>
+                </el-tooltip>
+            </span>
+            <el-input v-model="form.description" type="textarea"></el-input>
         </el-form-item>
-        <el-form-item label="启用">
-            <el-checkbox v-model="form.enabled" label="是"></el-checkbox>
+        <el-form-item>
+            <span slot="label">
+                启用 
+                <el-tooltip content="指示此资源是否已启用且可以请求。 默认为 true。" placement="top">
+                    <i class="el-alert__icon el-icon-info"></i>
+                </el-tooltip>
+            </span>
+            <el-switch v-model="form.enabled"></el-switch>
+        </el-form-item>
+        <el-form-item>
+            <span slot="label">
+                作用域 
+                <el-tooltip content="API 必须至少有一个作用域。 每个作用域可以有不同的设置。" placement="top">
+                    <i class="el-alert__icon el-icon-info"></i>
+                </el-tooltip>
+            </span>
+            <el-button @click="handleManageScope" type="primary">管理作用域（{{scopeCount}}）</el-button>
         </el-form-item>
         <el-form-item label="声明">
             <el-select style="width: 100%"
@@ -49,6 +82,8 @@
         <el-button @click="dialogVisible = false" size="small">取 消</el-button>
         <el-button type="primary" @click="handleSubmit" size="small">保 存</el-button>
     </div>
+
+    <UpdateApiResourceScopeDialog ref="updateApiResourceScopeDialog" v-model="form.scopes"></UpdateApiResourceScopeDialog>
   </el-dialog>
 </template>
 
@@ -57,6 +92,7 @@ import {
   updateApiResource, getApiResource, createApiResource
 } from '@/api/identity-server/apiResource'
 import SecretEditor from './SecretEditor'
+import UpdateApiResourceScopeDialog from './UpdateApiResourceScopeDialog'
 import _ from 'lodash'
 
 const defaultForm = {
@@ -77,7 +113,7 @@ const userClaimSuggestions = [ 'sub','name', 'given_name', 'family_name', 'middl
     'birthdate', 'zoneinfo', 'locale', 'phone_number', 'phone_number_verified', 'address', 'updated_at'  ]
 
 export default {
-    components: { SecretEditor },
+    components: { SecretEditor, UpdateApiResourceScopeDialog },
     data(){
         return {
             form: _.cloneDeep(defaultForm),
@@ -88,6 +124,12 @@ export default {
             },
             dialogVisible: false,
             userClaimSuggestions
+        }
+    },
+    computed: {
+        scopeCount(){
+            if(!this.form.scopes) return 0
+            return this.form.scopes.length
         }
     },
     methods: {
@@ -126,6 +168,9 @@ export default {
             if(isExist) return 
 
             this.form.userClaims.push(userClaim)
+        },
+        handleManageScope(){
+            this.$refs.updateApiResourceScopeDialog.showDialog()
         },
         showDialog(id){
             if(id){

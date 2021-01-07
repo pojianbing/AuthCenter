@@ -1,0 +1,168 @@
+<template>
+  <el-dialog
+    custom-class="custom"
+    :close-on-click-modal="false"
+    title="创建"
+    width="880px"
+    :append-to-body="true"
+    :visible.sync="dialogVisible">
+    <el-card shadow="never" title="Api 作用域">
+        <el-form ref="form" :model="form" :rules="rules" label-width="100px" size="small">
+            <el-form-item prop="name">
+                <span slot="label">
+                    名称 
+                    <el-tooltip content="AAPI 的唯一名称。 此值用于自我认证，并将添加到传给受众的访问令牌 access_token 中。" placement="top">
+                        <i class="el-alert__icon el-icon-info"></i>
+                    </el-tooltip>
+                </span>
+                <el-input v-model="form.name"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <span slot="label">
+                    显示名称 
+                    <el-tooltip content="该值可以用于例如 在同意屏幕上。" placement="top">
+                        <i class="el-alert__icon el-icon-info"></i>
+                    </el-tooltip>
+                </span>
+                <el-input v-model="form.displayName"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <span slot="label">
+                    描述 
+                    <el-tooltip content="该值可以用于例如 在同意屏幕上。" placement="top">
+                        <i class="el-alert__icon el-icon-info"></i>
+                    </el-tooltip>
+                </span>
+                <el-input v-model="form.description" type="textarea"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <span slot="label">
+                    必须 
+                    <el-tooltip content="指定用户是否可以在同意屏幕上取消选择作用域（如果同意屏幕要实现此类功能）。 默认为 false。" placement="top">
+                        <i class="el-alert__icon el-icon-info"></i>
+                    </el-tooltip>
+                </span>
+                <el-switch v-model="form.required"></el-switch>
+            </el-form-item>
+            <el-form-item>
+                <span slot="label">
+                    强调 
+                    <el-tooltip content="指定同意屏幕是否会强调此作用域（如果同意屏幕要实现此类功能）。 将此设置用于敏感或重要作用域。 默认为 false。" placement="top">
+                        <i class="el-alert__icon el-icon-info"></i>
+                    </el-tooltip>
+                </span>
+                <el-switch v-model="form.emphasize"></el-switch>
+            </el-form-item>
+            <el-form-item>
+                <span slot="label">
+                    用户声明 
+                    <el-tooltip content="应包含在身份令牌 id_token 中的关联用户声明类型的列表。" placement="top">
+                        <i class="el-alert__icon el-icon-info"></i>
+                    </el-tooltip>
+                </span>
+                <SmartPicker type="claim" v-model="form.userClaims"></SmartPicker>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="handleAdd" size="small">{{ updateIndex === -1 ? '保 存' : '更 新' }}</el-button>
+            </el-form-item>
+        </el-form>
+    </el-card>
+    <el-card shadow="never" title="Api 作用域">
+        <el-table :data="scopes" style="width: 100%;margin-top:20px" border>
+            <el-table-column prop="name" label="名称"></el-table-column>
+            <el-table-column prop="displayName" label="显示名"></el-table-column>
+            <el-table-column
+                fixed="right"
+                label="操作"
+                width="150">
+                <template slot-scope="{ row, $index }">
+                    <el-button @click="handleUpdate(row, $index)" type="primary" size="mini">编辑</el-button>
+                    <el-button @click="handleDelete(row, $index)" type="danger" size="mini">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </el-card>
+    
+    <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false" size="small">取 消</el-button>
+        <el-button type="primary" @click="handleConfirm" size="small">确 定</el-button>
+    </div>
+  </el-dialog>
+</template>
+
+<script>
+import SmartPicker from './SmartPicker'
+import _ from 'lodash'
+
+const defaultForm = {
+    userClaims: [],
+}
+
+export default {
+    components: { SmartPicker },
+    props: {
+        value:{
+            type: Array,
+            isRequired: true, 
+            default(){
+                return []
+            }
+        }
+    },
+    data(){
+        return {
+            form: _.cloneDeep(defaultForm),
+            rules: {
+                name: [
+                    { required: true, message: '请输入名称', trigger: 'blur' }
+                ]
+            },
+            dialogVisible: false,
+            scopes: [],
+            updateIndex: -1
+        }
+    },
+    watch: {
+        value: {
+            handler(val){
+                this.scopes = _.cloneDeep(val || [])
+            },
+            immediate: true
+        }
+    },
+    methods: {
+        handleAdd(){
+            this.$refs.form.validate((valid) => {
+                if(!valid) return
+
+                if(this.updateIndex === - 1){
+                    this.scopes.push(_.cloneDeep(this.form))
+                } else {
+                    this.$set(this.scopes, this.updateIndex, this.form)
+                    this.updateIndex = -1
+                }
+                
+                this.form = _.cloneDeep(defaultForm)
+            });
+        },
+        handleDelete(item, index){
+            this.scopes.splice(index, 1)
+        },
+        handleUpdate(item, index){
+            this.updateIndex = index
+            this.form = this.scopes[index]
+        },
+        handleConfirm(){
+            this.$emit('input', _.cloneDeep(this.scopes))
+            this.dialogVisible = false
+        },
+        showDialog(){
+            this.dialogVisible = true
+        },
+    }
+}
+</script>
+
+<style>
+
+</style>

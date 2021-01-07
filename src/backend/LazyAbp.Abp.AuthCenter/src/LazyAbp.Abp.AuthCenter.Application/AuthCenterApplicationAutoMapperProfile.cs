@@ -13,6 +13,7 @@ using Volo.Abp.IdentityServer.Clients;
 using Volo.Abp.IdentityServer.Grants;
 using Volo.Abp.IdentityServer.IdentityResources;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace LazyAbp.Abp.AuthCenter
 {
@@ -57,7 +58,17 @@ namespace LazyAbp.Abp.AuthCenter
                     opt => opt.MapFrom(src => src.UserClaims.Select(x => x.Type)))
                 ;
             CreateMap<ApiSecret, ApiSecretDto>().ReverseMap();
-            CreateMap<ApiScope, ApiScopeDto>().ReverseMap();
+            CreateMap<ApiScopeDto, ApiScope>()
+                .ForMember(des => des.UserClaims,
+                    opt => opt.MapFrom((src, dest) =>
+                    {
+                        dest.UserClaims = new List<ApiScopeClaim>();
+                        return "";
+                    }));
+            CreateMap<ApiScope, ApiScopeDto>()
+                .ForMember(des => des.UserClaims,
+                    opt => opt.MapFrom(src => src.UserClaims.Select(x => x.Type))
+                );
 
             CreateMap<UpdateApiResourceInputDto, ApiResource>()
                 .Ignore(des => des.UserClaims)
@@ -65,9 +76,7 @@ namespace LazyAbp.Abp.AuthCenter
                 .Ignore(des => des.Properties)
                 .Ignore(des => des.ExtraProperties)
                 .Ignore(des => des.ConcurrencyStamp)
-                .IgnoreFullAuditedObjectProperties()
-
-                ;
+                .IgnoreFullAuditedObjectProperties();
 
             CreateMap<Client, ClientDto>()
                 .ForMember(des => des.IdentityProviderRestrictions,
@@ -104,22 +113,39 @@ namespace LazyAbp.Abp.AuthCenter
                 .Ignore(des => des.Properties)
                 .Ignore(des => des.ExtraProperties)
                 .Ignore(des => des.ConcurrencyStamp)
-                .IgnoreFullAuditedObjectProperties()
-                ;
-
+                .IgnoreFullAuditedObjectProperties();
 
             CreateMap<IdentityResource, IdentityResourceDto>()
                  .ForMember(des => des.UserClaims,
                     opt => opt.MapFrom(src => src.UserClaims.Select(x => x.Type)))
-                ;
+                 .ForMember(des => des.Properties,
+                    opt => opt.MapFrom((src, dest) =>
+                    {
+                        if (src.Properties == null) return new List<ClientPropertyDto>();
+                        return src.Properties.Select(e => new ClientPropertyDto { Key = e.Key, Value = e.Value }).ToList();
+                    }));
             CreateMap<UpdateIdentityResourceInputDto, IdentityResource>()
-                .Ignore(des => des.UserClaims)
+                 .ForMember(des => des.Properties,
+                    opt => opt.MapFrom((src, dest) =>
+                    {
+                        var result = new Dictionary<string, string>();
+                        if (src.Properties == null) return result;
+
+                        src.Properties.ForEach(e =>
+                        {
+                            if (!result.ContainsKey(e.Key))
+                            {
+                                result.Add(e.Key, e.Value);
+                            }
+                        });
+
+                        return result;
+                    }))
                 .Ignore(des => des.Id)
-                .Ignore(des => des.Properties)
+                .Ignore(des => des.UserClaims)
                 .Ignore(des => des.ExtraProperties)
                 .Ignore(des => des.ConcurrencyStamp)
-                .IgnoreFullAuditedObjectProperties()
-                ;
+                .IgnoreFullAuditedObjectProperties();
 
             CreateMap<PersistedGrant, PersistedGrantDto>();
         }

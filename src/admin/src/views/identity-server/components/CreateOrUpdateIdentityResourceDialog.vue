@@ -6,50 +6,86 @@
     width="880px"
     :visible.sync="dialogVisible">
     <el-form ref="form" :model="form" :rules="rules" label-width="100px" size="small">
-        <el-form-item label="名称" prop="name">
+        <el-form-item>
+            <span slot="label">
+                名称 
+                <el-tooltip content="身份资源的唯一名称。 这是客户端将用于授权请求中的作用域参数的值。" placement="top">
+                    <i class="el-alert__icon el-icon-info"></i>
+                </el-tooltip>
+            </span>
             <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item label="显示名称" prop="displayName">
+        <el-form-item>
+            <span slot="label">
+                显示名称 
+                <el-tooltip content="该值将用于例如 在同意屏幕上。" placement="top">
+                    <i class="el-alert__icon el-icon-info"></i>
+                </el-tooltip>
+            </span>
             <el-input v-model="form.displayName"></el-input>
         </el-form-item>
-        <el-form-item label="描述">
-            <el-input v-model="form.description"></el-input>
+        <el-form-item>
+            <span slot="label">
+                描述 
+                <el-tooltip content="该值将用于例如 在同意屏幕上。" placement="top">
+                    <i class="el-alert__icon el-icon-info"></i>
+                </el-tooltip>
+            </span>
+            <el-input v-model="form.description" type="textarea"></el-input>
         </el-form-item>
-        <el-form-item label="启用">
-            <el-checkbox v-model="form.enabled" label="是"></el-checkbox>
+        <el-form-item>
+            <span slot="label">
+                启用 
+                <el-tooltip content="指示此资源是否已启用且可以请求。 默认为 true。" placement="top">
+                    <i class="el-alert__icon el-icon-info"></i>
+                </el-tooltip>
+            </span>
+            <el-switch v-model="form.enabled"></el-switch>
         </el-form-item>
-        <el-form-item label="必要">
-            <el-checkbox v-model="form.required" label="是"></el-checkbox>
+        <el-form-item>
+            <span slot="label">
+                在发现文档中显示 
+                <el-tooltip content="指定此作用域是否显示在发现文档中。 默认为 true。" placement="top">
+                    <i class="el-alert__icon el-icon-info"></i>
+                </el-tooltip>
+            </span>
+            <el-switch v-model="form.showInDiscoveryDocument"></el-switch>
         </el-form-item>
-        <el-form-item label="强调">
-            <el-checkbox v-model="form.emphasize" label="是"></el-checkbox>
+        <el-form-item>
+            <span slot="label">
+                必须 
+                <el-tooltip content="指定用户是否可以在同意屏幕上取消选择作用域（如果同意屏幕要实现此类功能）。 默认为 false。" placement="top">
+                    <i class="el-alert__icon el-icon-info"></i>
+                </el-tooltip>
+            </span>
+            <el-switch v-model="form.required"></el-switch>
         </el-form-item>
-        <el-form-item label="在发现文档中显示">
-            <el-checkbox v-model="form.showInDiscoveryDocument" label="是"></el-checkbox>
+        <el-form-item>
+            <span slot="label">
+                强调 
+                <el-tooltip content="指定同意屏幕是否会强调此作用域（如果同意屏幕要实现此类功能）。 将此设置用于敏感或重要作用域。 默认为 false。" placement="top">
+                    <i class="el-alert__icon el-icon-info"></i>
+                </el-tooltip>
+            </span>
+            <el-switch v-model="form.emphasize"></el-switch>
         </el-form-item>
-        <el-form-item label="声明">
-            <el-select style="width: 100%"
-                v-model="form.userClaims"
-                multiple
-                filterable
-                allow-create
-                default-first-option
-                placeholder="Add Grant">
-                <el-option
-                    v-for="item in form.userClaims"
-                    :key="item"
-                    :label="item"
-                    :value="item">
-                </el-option>
-            </el-select>
-            <el-tag 
-                type="info" 
-                style="margin-right:5px;cursor: pointer;" 
-                v-for="(item, idx) in userClaimSuggestions" 
-                :key="idx" 
-                @click="handleSuggestionAdd(item)">
-                {{item}} <i class="el-icon-circle-plus-outline"/>
-            </el-tag>
+        <el-form-item>
+            <span slot="label">
+                用户声明 
+                <el-tooltip content="应包含在身份令牌 id_token 中的关联用户声明类型的列表。" placement="top">
+                    <i class="el-alert__icon el-icon-info"></i>
+                </el-tooltip>
+            </span>
+            <SmartPicker type="claim" v-model="form.userClaims"></SmartPicker>
+        </el-form-item>
+        <el-form-item>
+            <span slot="label">
+                属性
+                <el-tooltip content="字典可根据需要保存任何自定义客户端特定值。" placement="top">
+                    <i class="el-alert__icon el-icon-info"></i>
+                </el-tooltip>
+            </span>
+            <PropertyEditor v-model="form.properties"></PropertyEditor>
         </el-form-item>
      </el-form>
     <div slot="footer" class="dialog-footer">
@@ -63,6 +99,9 @@
 import {
   updateIdentityResource, getIdentityResource, createIdentityResource
 } from '@/api/identity-server/identityResource'
+import ClaimsEditor from './ClaimsEditor'
+import PropertyEditor from './PropertyEditor'
+import SmartPicker from './SmartPicker'
 import _ from 'lodash'
 
 const defaultForm = {
@@ -77,11 +116,8 @@ const defaultForm = {
     userClaims: []
 }
 
-const userClaimSuggestions = [ 'sub','name', 'given_name', 'family_name', 'middle_name', 'nickname', 
-    'preferrred_username', 'profile', 'picture', 'website', 'email', 'email_verified', 'gender', 
-    'birthdate', 'zoneinfo', 'locale', 'phone_number', 'phone_number_verified', 'address', 'updated_at'  ]
-
 export default {
+    components: { ClaimsEditor, PropertyEditor, SmartPicker },
     data(){
         return {
             form: _.cloneDeep(defaultForm),
@@ -90,8 +126,7 @@ export default {
                     { required: true, message: '请输入名称', trigger: 'blur' }
                 ]
             },
-            dialogVisible: false,
-            userClaimSuggestions
+            dialogVisible: false
         }
     },
     methods: {
@@ -141,6 +176,9 @@ export default {
                 this.form =  _.cloneDeep(defaultForm)
                 this.dialogVisible = true
             }
+        },
+        adapte2ViewData(){
+            this.form = res
         }
     }
 }

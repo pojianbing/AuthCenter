@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using EasyAbp.IdentityServerAdmin.Permissions;
 using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EasyAbp.IdentityServerAdmin.Application.EasyAbp.IdentityServerAdmin.ApiResources
 {
@@ -24,8 +25,6 @@ namespace EasyAbp.IdentityServerAdmin.Application.EasyAbp.IdentityServerAdmin.Ap
         {
             _repository = repository;
         }
-
-
 
         public override async Task<PagedResultDto<ApiResourceDto>> GetListAsync(GetApiResourceListInput input)
         {
@@ -75,6 +74,27 @@ namespace EasyAbp.IdentityServerAdmin.Application.EasyAbp.IdentityServerAdmin.Ap
 
             var apiResource = await _repository.FindAsync(id, true);
             apiResource = ObjectMapper.Map<UpdateApiResourceInputDto, ApiResource>(input, apiResource);
+
+            // scope内user
+            //if (apiResource.Scopes != null)
+            //{
+            //    for (var i = 0; i < apiResource.Scopes.Count; i++)
+            //    {
+            //        var scope = apiResource.Scopes[i];
+            //        var inputScope = input.Scopes[i];
+            //        if (scope.ApiResourceId == Guid.Empty) continue;
+
+            //        scope.RemoveAllUserClaims();
+            //        if (inputScope.UserClaims != null)
+            //        {
+            //            inputScope.UserClaims.ForEach(e =>
+            //            {
+            //                scope.AddUserClaim(e);
+            //            });
+            //        }
+            //    }
+            //}
+
             apiResource = await _repository.UpdateAsync(apiResource);
             return MapToGetListOutputDto(apiResource);
         }

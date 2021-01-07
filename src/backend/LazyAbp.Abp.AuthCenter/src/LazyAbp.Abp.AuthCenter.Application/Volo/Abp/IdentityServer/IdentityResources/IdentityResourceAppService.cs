@@ -57,9 +57,17 @@ namespace EasyAbp.IdentityServerAdmin.IdentityResources
                 Enabled = input.Enabled,
                 Required = input.Required,
                 Emphasize = input.Emphasize,
-                ShowInDiscoveryDocument = input.ShowInDiscoveryDocument
+                ShowInDiscoveryDocument = input.ShowInDiscoveryDocument,
+                Properties = new Dictionary<string, string>()
             };
             input.UserClaims.ForEach(x => identityResource.AddUserClaim(x));
+            input.Properties.ForEach(x =>
+            {
+                if (!identityResource.Properties.ContainsKey(x.Key))
+                {
+                    identityResource.Properties.Add(x.Key, x.Value);
+                }
+            });
             identityResource = await _repository.InsertAsync(identityResource);
             return MapToGetOutputDto(identityResource);
         }
@@ -74,6 +82,17 @@ namespace EasyAbp.IdentityServerAdmin.IdentityResources
             }
             var identityResource = await _repository.FindAsync(id);
             identityResource = ObjectMapper.Map<UpdateIdentityResourceInputDto, IdentityResource>(input, identityResource);
+
+            // userClaim
+            identityResource.RemoveAllUserClaims();
+            if (input.UserClaims != null)
+            {
+                input.UserClaims.ForEach(e =>
+                {
+                    identityResource.AddUserClaim(e);
+                });
+            }
+
             identityResource = await _repository.UpdateAsync(identityResource);
             return MapToGetOutputDto(identityResource);
         }

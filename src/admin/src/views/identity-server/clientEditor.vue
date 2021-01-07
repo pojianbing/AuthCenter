@@ -140,7 +140,7 @@
                                 <i class="el-alert__icon el-icon-info"></i>
                             </el-tooltip>
                         </span>
-                        <ClientPropertyEditor v-model="form.properties"></ClientPropertyEditor>
+                        <PropertyEditor v-model="form.properties"></PropertyEditor>
                     </el-form-item>
                 </el-tab-pane>
                 <el-tab-pane label="认证/注销">
@@ -217,100 +217,218 @@
                         <el-input v-model="form.backChannelLogoutUri" type="number"></el-input>
                     </el-form-item>
                 </el-tab-pane>
-                <el-tab-pane label="Basic">
-                    <el-form-item label="客户 Uri">
-                        <el-input v-model="form.clientUri"></el-input>
+                <el-tab-pane label="令牌">
+                    <el-form-item>
+                        <span slot="label">
+                            身份令牌生命周期
+                            <el-tooltip content="身份令牌 id_token 的生命周期（以秒为单位）（默认为 300 秒/5 分钟）" placement="top">
+                                <i class="el-alert__icon el-icon-info"></i>
+                            </el-tooltip>
+                        </span>
+                        <el-input v-model="form.identityTokenLifetime" type="number"></el-input>
                     </el-form-item>
-                    <el-form-item label="Logo Uri">
-                        <el-input v-model="form.logoUri"></el-input>
+                    <el-form-item>
+                        <span slot="label">
+                            访问令牌生命周期
+                            <el-tooltip content="访问令牌 access_token 的生命周期（以秒为单位）（默认为 3600 秒/1 小时）" placement="top">
+                                <i class="el-alert__icon el-icon-info"></i>
+                            </el-tooltip>
+                        </span>
+                        <el-input v-model="form.accessTokenLifetime" type="number"></el-input>
                     </el-form-item>
-                    <el-form-item label="Allowed Cors Origins">
-                        <el-select style="width: 100%"
-                            v-model="form.allowedCorsOrigins"
-                            multiple
-                            filterable
-                            allow-create
-                            default-first-option
-                            placeholder="Add Allowed Cors Origins">
-                            <el-option
-                                v-for="item in form.allowedCorsOrigins"
-                                :key="item"
-                                :label="item"
-                                :value="item">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-tab-pane>
-                <el-tab-pane label="Settings">
-                    <el-form-item label="Require Consent Screen">
-                        <el-checkbox v-model="form.requireConsent" label="是"></el-checkbox>
-                    </el-form-item>
-                    <el-form-item label="Remember Consent">
-                        <el-checkbox v-model="form.allowRememberConsent" label="是"></el-checkbox>
-                    </el-form-item>
-                </el-tab-pane>
-                <el-tab-pane label="Token">
-                    <el-form-item label="Identity Token Lifetime">
-                        <el-input-number class="custom" style="width: 100%;" :controls="false" v-model="form.identityTokenLifetime" ></el-input-number>
-                    </el-form-item>
-                    <el-form-item label="Access Token Lifetime">
-                        <el-input-number class="custom" style="width: 100%;" :controls="false" v-model="form.accessTokenLifetime" ></el-input-number>
-                    </el-form-item>
-                    <el-form-item label="Access Token Type">
+                    <el-form-item>
+                        <span slot="label">
+                            访问令牌类型 
+                            <el-tooltip content="指定访问令牌 access_token 是引用令牌还是自包含 JWT 令牌（默认为 Jwt）。" placement="top">
+                                <i class="el-alert__icon el-icon-info"></i>
+                            </el-tooltip>
+                        </span>
                         <el-select v-model="form.accessTokenType" style="width:100%">
                             <el-option label="Jwt" :value="0">Jwt</el-option>
                             <el-option label="Reference" :value="1">Reference</el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="Authorization Code Lifetime">
-                        <el-input-number class="custom" style="width: 100%;" :controls="false" v-model="form.authorizationCodeLifetime" ></el-input-number>
+                    <el-form-item>
+                        <span slot="label">
+                            授权码生命周期
+                            <el-tooltip content="授权码的生命周期（以秒为单位）（默认为 300 秒/5 分钟）" placement="top">
+                                <i class="el-alert__icon el-icon-info"></i>
+                            </el-tooltip>
+                        </span>
+                        <el-input v-model="form.authorizationCodeLifetime" type="number"></el-input>
                     </el-form-item>
-                    <el-form-item label="Absolute Refresh Token Lifetime">
-                        <el-input-number class="custom" style="width: 100%;" :controls="false" v-model="form.absoluteRefreshTokenLifetime" ></el-input-number>
+                    <el-form-item>
+                        <span slot="label">
+                            绝对刷新令牌生命周期
+                            <el-tooltip content="刷新令牌的最长生命周期，以秒为单位。 默认为 2592000 秒/30 天" placement="top">
+                                <i class="el-alert__icon el-icon-info"></i>
+                            </el-tooltip>
+                        </span>
+                        <el-input v-model="form.absoluteRefreshTokenLifetime" type="number"></el-input>
                     </el-form-item>
-                    <el-form-item label="Sliding Refresh Token Lifetime">
-                        <el-input-number class="custom" style="width: 100%;" :controls="false" v-model="form.slidingRefreshTokenLifetime" ></el-input-number>
+                    <el-form-item>
+                        <span slot="label">
+                            滚动刷新令牌生命周期
+                            <el-tooltip content="滚动刷新生命周期是多少秒钟刷新令牌。 默认为 1296000 秒/15 天" placement="top">
+                                <i class="el-alert__icon el-icon-info"></i>
+                            </el-tooltip>
+                        </span>
+                        <el-input v-model="form.slidingRefreshTokenLifetime" type="number"></el-input>
                     </el-form-item>
-                    <el-form-item label="Refresh Token Usage">
+                    <el-form-item>
+                        <span slot="label">
+                            刷新令牌使用情况 
+                            <el-tooltip content="ReUse 刷新令牌时，令牌句柄将保持不变 OneTime 刷新令牌时将更新令牌句柄" placement="top">
+                                <i class="el-alert__icon el-icon-info"></i>
+                            </el-tooltip>
+                        </span>
                         <el-select v-model="form.refreshTokenUsage" style="width:100%">
                             <el-option label="One Time Only" :value="0"></el-option>
                             <el-option label="Reuse" :value="1"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="Refresh Token Expiration">
+                    <el-form-item>
+                        <span slot="label">
+                            刷新令牌过期 
+                            <el-tooltip content="Absolute 绝对刷新令牌将在固定时间点到期（由“绝对刷新令牌生命周期”指定）Sliding 滚动刷新令牌，刷新令牌时生命周期将被更新（按“滚动刷新令牌生命周期”中指定的量）。生命周期不会超过“绝对刷新令牌生命周期”。" placement="top">
+                                <i class="el-alert__icon el-icon-info"></i>
+                            </el-tooltip>
+                        </span>
                         <el-select v-model="form.refreshTokenExpiration" style="width:100%">
                             <el-option label="Absolute" :value="0"></el-option>
                             <el-option label="Sliding" :value="1"></el-option>
                         </el-select>
+                    </el-form-item> 
+                    <el-form-item>
+                        <span slot="label">
+                            允许跨域来源
+                            <el-tooltip content="如果指定，将由默认 CORS 策略服务实现（In-Memory 和 EF）用于为 JavaScript 客户端构建 CORS 策略。" placement="top">
+                                <i class="el-alert__icon el-icon-info"></i>
+                            </el-tooltip>
+                        </span>
+                        <SmartPicker v-model="form.allowedCorsOrigins"></SmartPicker>
                     </el-form-item>
-                    <el-form-item label="Update Access Token Claims On Refresh">
-                        <el-checkbox v-model="form.updateAccessTokenClaimsOnRefresh" label="是"></el-checkbox>
+                    <el-form-item>
+                        <span slot="label">
+                            刷新时更新访问令牌声明 
+                            <el-tooltip content="获取或设置一个值，该值指示是否应在刷新令牌请求上更新访问令牌 access_token（及其声明）。" placement="top">
+                                <i class="el-alert__icon el-icon-info"></i>
+                            </el-tooltip>
+                        </span>
+                        <el-switch v-model="form.updateAccessTokenClaimsOnRefresh"></el-switch>
                     </el-form-item>
-                    <el-form-item label="Include Jwt Id">
-                        <el-checkbox v-model="form.includeJwtId" label="是"></el-checkbox>
+                    <el-form-item>
+                        <span slot="label">
+                            包括 Jwt 标识 
+                            <el-tooltip content="指定 JWT 访问令牌 access_token 是否应具有嵌入的唯一标识（通过 jti 声明）。" placement="top">
+                                <i class="el-alert__icon el-icon-info"></i>
+                            </el-tooltip>
+                        </span>
+                        <el-switch v-model="form.includeJwtId"></el-switch>
                     </el-form-item>
-                    <el-form-item label="Always Send Client Claims">
-                        <el-checkbox v-model="form.alwaysSendClientClaims" label="是"></el-checkbox>
+                    <el-form-item>
+                        <span slot="label">
+                            始终发送客户端声明
+                            <el-tooltip content="如果设置，将为每个流发送客户端声明。 如果不是，仅用于客户端凭证流（默认为 false）" placement="top">
+                                <i class="el-alert__icon el-icon-info"></i>
+                            </el-tooltip>
+                        </span>
+                        <el-switch v-model="form.alwaysSendClientClaims"></el-switch>
                     </el-form-item>
-                    <el-form-item label="Always Include User Claims In IdToken">
-                        <el-checkbox v-model="form.alwaysIncludeUserClaimsInIdToken" label="是"></el-checkbox>
+                    <el-form-item>
+                        <span slot="label">
+                            始终在身份令牌中包含用户声明
+                            <el-tooltip content="指定是否在身份令牌 id_token 中包含用户声明" placement="top">
+                                <i class="el-alert__icon el-icon-info"></i>
+                            </el-tooltip>
+                        </span>
+                        <el-switch v-model="form.alwaysIncludeUserClaimsInIdToken"></el-switch>
                     </el-form-item>
-                    <el-form-item label="Pair Wise Subject Salt">
-                        <el-input v-model="form.pairWiseSubjectSalt"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Client Claims Prefix">
+                    <el-form-item>
+                        <span slot="label">
+                            客户端声明前缀
+                            <el-tooltip content="如果设置，客户端声明类型将以此为前缀。 默认为 client_。 目的是确保它们不会意外地与用户声明冲突。" placement="top">
+                                <i class="el-alert__icon el-icon-info"></i>
+                            </el-tooltip>
+                        </span>
                         <el-input v-model="form.clientClaimsPrefix"></el-input>
                     </el-form-item>
+                    <el-form-item>
+                        <span slot="label">
+                            配对主体盐
+                            <el-tooltip content="对于此客户端的用户，在配对主体标识生成中使用的盐值。" placement="top">
+                                <i class="el-alert__icon el-icon-info"></i>
+                            </el-tooltip>
+                        </span>
+                        <el-input v-model="form.pairWiseSubjectSalt"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <span slot="label">
+                            声明
+                            <el-tooltip content="允许客户端的设置声明（将包含在访问令牌 access_token 中）。" placement="top">
+                                <i class="el-alert__icon el-icon-info"></i>
+                            </el-tooltip>
+                        </span>
+                        <ClaimsEditor v-model="form.claims"></ClaimsEditor>
+                    </el-form-item>
                 </el-tab-pane>
-                <el-tab-pane label="Claims">
-                    <ClientClaimsEditor v-model="form.claims"></ClientClaimsEditor>
+                <el-tab-pane label="同意屏幕">
+                    <el-form-item>
+                        <span slot="label">
+                            需要同意
+                            <el-tooltip content="指定是否需要同意屏幕。 默认为 true。" placement="top">
+                                <i class="el-alert__icon el-icon-info"></i>
+                            </el-tooltip>
+                        </span>
+                        <el-switch v-model="form.requireConsent"></el-switch>
+                    </el-form-item>
+                    <el-form-item>
+                        <span slot="label">
+                            允许记住同意
+                            <el-tooltip content="指定用户是否可以选择存储同意决策。 默认为 true。" placement="top">
+                                <i class="el-alert__icon el-icon-info"></i>
+                            </el-tooltip>
+                        </span>
+                        <el-switch v-model="form.allowRememberConsent"></el-switch>
+                    </el-form-item>
+                    <el-form-item>
+                        <span slot="label">
+                            客户端 Uri
+                            <el-tooltip content="有关客户端的更多信息的URI（在同意屏幕上使用）" placement="top">
+                                <i class="el-alert__icon el-icon-info"></i>
+                            </el-tooltip>
+                        </span>
+                        <el-input v-model="form.clientUri"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <span slot="label">
+                            徽标 Uri
+                            <el-tooltip content="客户端徽标 URI（在同意屏幕上使用）" placement="top">
+                                <i class="el-alert__icon el-icon-info"></i>
+                            </el-tooltip>
+                        </span>
+                        <el-input v-model="form.logoUri"></el-input>
+                    </el-form-item>
                 </el-tab-pane>
-                <el-tab-pane label="DeviceFlow">
-                    <el-form-item label="User Code Type">
+
+                <el-tab-pane label="设备流程">
+                    <el-form-item>
+                        <span slot="label">
+                            用户代码类型
+                            <el-tooltip content="指定用于客户端的用户代码的类型。 否则回落到默认值。" placement="top">
+                                <i class="el-alert__icon el-icon-info"></i>
+                            </el-tooltip>
+                        </span>
                         <el-input v-model="form.userCodeType"></el-input>
                     </el-form-item>
-                    <el-form-item label="Device Code Lifetime">
-                        <el-input-number class="custom" style="width: 100%;" :controls="false" v-model="form.deviceCodeLifetime" ></el-input-number>
+                    <el-form-item>
+                        <span slot="label">
+                            设备代码生命周期
+                            <el-tooltip content="设备代码的生命周期（以秒为单位）（默认为 300 秒/5 分钟）" placement="top">
+                                <i class="el-alert__icon el-icon-info"></i>
+                            </el-tooltip>
+                        </span>
+                        <el-input v-model="form.deviceCodeLifetime" type="number"></el-input>
                     </el-form-item>
                 </el-tab-pane>
             </el-tabs>
@@ -329,8 +447,8 @@ import {
   updateClient, getClient
 } from '@/api/identity-server/client'
 import SecretEditor from './components/SecretEditor'
-import ClientClaimsEditor from './components/ClientClaimsEditor'
-import ClientPropertyEditor from './components/ClientPropertyEditor'
+import ClaimsEditor from './components/ClaimsEditor'
+import PropertyEditor from './components/PropertyEditor'
 import SmartPicker from './components/SmartPicker'
 
 const defaultGrantTypes = [
@@ -350,7 +468,7 @@ const defaultClientSecret = {
 }
 
 export default {
-    components: { SecretEditor, ClientClaimsEditor, ClientPropertyEditor, SmartPicker },
+    components: { SecretEditor, ClaimsEditor, PropertyEditor, SmartPicker },
     data(){
         return {
             form: {

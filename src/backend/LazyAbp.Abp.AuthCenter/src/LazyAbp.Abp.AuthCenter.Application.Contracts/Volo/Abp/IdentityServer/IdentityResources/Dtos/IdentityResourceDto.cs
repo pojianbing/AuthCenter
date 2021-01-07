@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EasyAbp.IdentityServerAdmin.Clients.Dtos;
+using System;
 using System.Collections.Generic;
 using Volo.Abp.Application.Dtos;
 
@@ -14,5 +15,6 @@ namespace EasyAbp.IdentityServerAdmin.IdentityResources.Dtos
         public bool Emphasize { get; set; }
         public bool ShowInDiscoveryDocument { get; set; }
         public List<string> UserClaims { get; set; }
+        public virtual List<ClientPropertyDto> Properties { get; set; }
     }
 }

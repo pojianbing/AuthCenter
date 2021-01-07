@@ -77,7 +77,6 @@ export default {
         handler(newval, old){
             newval = newval || []
             this.selectedItems = [...newval]
-            console.log('')
         },
         immediate: true
     }

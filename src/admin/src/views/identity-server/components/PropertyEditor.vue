@@ -1,13 +1,13 @@
 <template>
-    <div>
+    <el-card shadow="never">
         <el-row align="middle" justify="center" type="flex">
-            <el-col :span="3" class="fieldName">类型</el-col>
+            <el-col :span="3" class="fieldName">键</el-col>
             <el-col :span="7" :offset="1" class="fieldValue">
-                <el-input v-model="clientClaim.type"></el-input>
+                <el-input v-model="clientProperty.key"></el-input>
             </el-col>
             <el-col :span="3" class="fieldName">值</el-col>
             <el-col :span="7" :offset="1" class="fieldValue">
-                <el-input v-model="clientClaim.value"></el-input>
+                <el-input v-model="clientProperty.value"></el-input>
             </el-col>
         </el-row>
         <el-row justify="end" type="flex">
@@ -15,8 +15,8 @@
             <el-col :span="1" ></el-col>
         </el-row>
 
-         <el-table :data="clientClaims" style="width: 100%;margin-top:20px">
-            <el-table-column prop="type" label="类型"></el-table-column>
+         <el-table :data="clientPropertys" style="width: 100%;margin-top:20px" border>
+            <el-table-column prop="key" label="类型"></el-table-column>
             <el-table-column prop="value" label="值"></el-table-column>
             <el-table-column
                 fixed="right"
@@ -27,14 +27,14 @@
                 </template>
             </el-table-column>
         </el-table>
-    </div>
+    </el-card>
 </template>
 
 <script>
 import _ from 'lodash'
 
-const defaultClientClaim = {
-    type: '',
+const defaultClientProperty = {
+    key: '',
     value: ''
 }
 
@@ -49,28 +49,31 @@ export default {
         }
     },
     watch: {
-        value(val){
-            this.clientClaims = _.cloneDeep(val || [])
+        value: {
+            handler(val){
+                this.clientPropertys = _.cloneDeep(val || [])
+            },
+            immediate: true
         }
     },
     data(){
         return {
-            clientClaim: _.cloneDeep(defaultClientClaim),
-            clientClaims: []
+            clientProperty: _.cloneDeep(defaultClientProperty),
+            clientPropertys: []
         }
     },
     methods: {
         handleAdd(){
-            this.clientClaims.push(this.clientClaim)
-            this.clientClaim = _.cloneDeep(defaultClientClaim)
+            this.clientPropertys.push(this.clientProperty)
+            this.clientProperty = _.cloneDeep(defaultClientProperty)
             this.onModelChange()
         },
         handleDelete(row, index){
-            this.clientClaims.splice(index, 1)
+            this.clientPropertys.splice(index, 1)
             this.onModelChange()
         },
         onModelChange(){
-            this.$emit('input', _.cloneDeep(this.clientClaims))
+            this.$emit('input', _.cloneDeep(this.clientPropertys))
         }
     }
 }
