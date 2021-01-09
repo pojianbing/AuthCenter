@@ -38,3 +38,37 @@ export function getApiResource(id) {
     method: 'get'
   })
 }
+
+export function getApiResourceScope(id) {
+  return request({
+    url: `/api/app/apiResource/${id}/scopes`,
+    method: 'get'
+  })
+}
+
+export function addApiResourceScope(data) {
+  return request({
+    url: `/api/app/apiResource/scopes`,
+    method: 'post',
+    data
+  })
+}
+
+export function deleteApiResourceScope(id, name) {
+  return request({
+    url: `/api/app/apiResource/${id}/scopes?name=${name}`,
+    method: 'delete'
+  })
+}
+
+export function updateApiResourceScope(beforeApiResourceId, beforeName, scope) {
+  return request({
+    url: `/api/app/apiResource/scopes`,
+    method: 'put',
+    data: { 
+      beforeApiResourceId, 
+      beforeName, 
+      scope
+    }
+  })
+}

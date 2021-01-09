@@ -14,6 +14,8 @@ using Volo.Abp.IdentityServer.Grants;
 using Volo.Abp.IdentityServer.IdentityResources;
 using System.Linq;
 using System.Collections.Generic;
+using LazyAbp.Abp.AuthCenter.Volo.Abp.IdentityServer.ApiResources.Dtos;
+using LazyAbp.Abp.AuthCenter.IdentityServer;
 
 namespace LazyAbp.Abp.AuthCenter
 {
@@ -54,26 +56,42 @@ namespace LazyAbp.Abp.AuthCenter
             CreateMap<UpdateClaimTypeDto, IdentityClaimType>().Ignore(x => x.IsStatic).Ignore(x => x.Id);
 
             CreateMap<ApiResource, ApiResourceDto>()
-                .ForMember(des => des.UserClaims,
-                    opt => opt.MapFrom(src => src.UserClaims.Select(x => x.Type)))
-                ;
-            CreateMap<ApiSecret, ApiSecretDto>().ReverseMap();
-            CreateMap<ApiScopeDto, ApiScope>()
-                .ForMember(des => des.UserClaims,
+                .ForMember(des => des.Properties,
                     opt => opt.MapFrom((src, dest) =>
                     {
-                        dest.UserClaims = new List<ApiScopeClaim>();
-                        return "";
-                    }));
+                        if (src.Properties == null) return new List<ClientPropertyDto>();
+                        return src.Properties.Select(e => new ClientPropertyDto { Key = e.Key, Value = e.Value }).ToList();
+                    }))
+                .ForMember(des => des.UserClaims,
+                    opt => opt.MapFrom(src => src.UserClaims.Select(x => x.Type)));
+            CreateMap<ApiSecret, ApiSecretDto>().ReverseMap();
+            CreateMap<ApiScopeDto, ApiScope>().Ignore(e => e.UserClaims);
             CreateMap<ApiScope, ApiScopeDto>()
                 .ForMember(des => des.UserClaims,
                     opt => opt.MapFrom(src => src.UserClaims.Select(x => x.Type))
                 );
 
             CreateMap<UpdateApiResourceInputDto, ApiResource>()
+                .Ignore(des => des.Scopes)
                 .Ignore(des => des.UserClaims)
+                //.Ignore(des => des.Secrets)
                 .Ignore(des => des.Id)
-                .Ignore(des => des.Properties)
+                .ForMember(des => des.Properties,
+                    opt => opt.MapFrom((src, dest) =>
+                    {
+                        var result = new Dictionary<string, string>();
+                        if (src.Properties == null) return result;
+
+                        src.Properties.ForEach(e =>
+                        {
+                            if (!result.ContainsKey(e.Key))
+                            {
+                                result.Add(e.Key, e.Value);
+                            }
+                        });
+
+                        return result;
+                 }))
                 .Ignore(des => des.ExtraProperties)
                 .Ignore(des => des.ConcurrencyStamp)
                 .IgnoreFullAuditedObjectProperties();
@@ -148,6 +166,28 @@ namespace LazyAbp.Abp.AuthCenter
                 .IgnoreFullAuditedObjectProperties();
 
             CreateMap<PersistedGrant, PersistedGrantDto>();
+
+            CreateMap<SharedApiScope, SharedApiScopeDto>()
+                .ForMember(e => e.UserClaims,
+                    opt => opt.MapFrom((src, dest) =>
+                    {
+                        return src.UserClaims == null ?
+                               new List<string>() :
+                               src.UserClaims.Select(e => e.Type).ToList();
+                    }));
+            CreateMap<SharedApiScopeDto, SharedApiScope>()
+                .ForMember(e => e.UserClaims,
+                    opt => opt.MapFrom((src, dest) =>
+                    {
+                        return src.UserClaims == null ?
+                               new List<SharedApiScopeClaim>() :
+                               src.UserClaims.Select(e => new SharedApiScopeClaim()
+                               {
+                                   ApiResourceId = src.ApiResourceId,
+                                   Name = src.Name,
+                                   Type = e
+                               }).ToList();
+                    }));
         }
     }
 }

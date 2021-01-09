@@ -1,4 +1,5 @@
 ﻿using EasyAbp.IdentityServerAdmin.ApiResources.Dtos;
+using LazyAbp.Abp.AuthCenter.Volo.Abp.IdentityServer.ApiResources.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,5 +14,8 @@ namespace EasyAbp.IdentityServerAdmin.ApiResources
         Task<ApiResourceDto> CreateAsync(CreateApiResourceInputDto input);
         Task<ApiResourceDto> UpdateAsync(Guid id,UpdateApiResourceInputDto input);
         Task DeleteAsync(Guid id);
+        Task<List<SharedApiScopeDto>> GetScopesAsync(Guid id);
+        Task AddScopesAsync(SharedApiScopeDto dto);
+        //Task AddScopes(List<>)
     }
 }

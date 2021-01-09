@@ -214,7 +214,7 @@
                                 <i class="el-alert__icon el-icon-info"></i>
                             </el-tooltip>
                         </span>
-                        <el-input v-model="form.backChannelLogoutUri" type="number"></el-input>
+                        <el-input v-model="form.userSsoLifetime" type="number"></el-input>
                     </el-form-item>
                 </el-tab-pane>
                 <el-tab-pane label="令牌">

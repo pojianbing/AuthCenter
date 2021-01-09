@@ -9,7 +9,13 @@
             </el-col>
             <el-col :span="3" class="fieldName">值</el-col>
             <el-col :span="7" :offset="1" class="fieldValue">
-                <el-input v-model="clientSecret.value"></el-input>
+                <el-input v-model="clientSecret.value"> 
+                    <template slot="append">
+                        <el-button type="primary" @click="handleGenerateUUID">
+                            <svg-icon icon-class="random" />
+                        </el-button>
+                    </template>
+                </el-input>
             </el-col>
         </el-row>
         <el-row align="middle" justify="center" type="flex">
@@ -54,6 +60,7 @@
 
 <script>
 import _ from 'lodash'
+import { guid } from '@/utils'
 
 const defaultClientSecret = {
     type: 'SharedSecret',
@@ -93,6 +100,9 @@ export default {
         handleDelete(row, index){
             this.clientSecrets.splice(index, 1)
             this.onModelChange()
+        },
+        handleGenerateUUID(){
+            this.clientSecret.value = guid()
         },
         onModelChange(){
             this.$emit('input', _.cloneDeep(this.clientSecrets))

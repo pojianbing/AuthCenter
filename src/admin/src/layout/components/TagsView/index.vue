@@ -17,7 +17,7 @@
       >
         <span
           slot="label"
-        ><svg-icon v-if="tag.meta && tag.meta.icon" :icon-class="tag.meta.icon" /> {{ generateTitle(tag.title) }}</span>
+        ><svg-icon v-if="tag.meta && tag.meta.tagIcon" :icon-class="tag.meta.tagIcon" /> {{ generateTitle(tag.title) }}</span>
       </el-tab-pane>
     </el-tabs>
     <el-dropdown @command="handleCommand">
@@ -58,7 +58,9 @@ export default {
           view.meta = {}
         }
         if (!view.meta.icon) {
-          view.meta.icon = this.findIcon(view.path)
+          view.meta.tagIcon = this.findIcon(view.path)
+        } else {
+          view.meta.tagIcon = view.meta.icon
         }
         views.push(view)
       })

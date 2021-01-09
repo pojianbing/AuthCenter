@@ -131,6 +131,13 @@ export const constantRoutes = [
         meta: { title: 'HelloAbp["Menu:ApiResource"]'}
       },
       {
+        path: 'apiResource/update',
+        component: () => import('@/views/identity-server/apiResourceEditor'),
+        hidden: true,
+        name: 'Id4-ApiResourceEditor',
+        meta: { title: 'Api资源编辑'}
+      },
+      {
         path: 'apiScopes',
         component: () => import('@/views/identity-server/apiScopes'),
         name: 'Id4-ApiScopes',

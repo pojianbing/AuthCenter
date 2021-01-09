@@ -176,9 +176,6 @@ export default {
                 this.form =  _.cloneDeep(defaultForm)
                 this.dialogVisible = true
             }
-        },
-        adapte2ViewData(){
-            this.form = res
         }
     }
 }

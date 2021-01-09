@@ -25,12 +25,12 @@ namespace EasyAbp.IdentityServerAdmin.Clients
         private readonly IClientRepository _repository;
 
         private readonly IRepository<SharedIdentityResource, Guid> _identityResourcesRepository;
-        private readonly IRepository<SharedApiScopes> _apiScopeRepository;
+        private readonly IRepository<SharedApiScope> _apiScopeRepository;
 
         public ClientAppService(
             IClientRepository repository,
             IRepository<SharedIdentityResource, Guid> identityResourcesRepository,
-            IRepository<SharedApiScopes> apiScopeRepository
+            IRepository<SharedApiScope> apiScopeRepository
             ) : base((IReadOnlyRepository<Client, Guid>)repository)
         {
             _repository = repository;

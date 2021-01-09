@@ -98,7 +98,8 @@
               </div>
           </div>
       </div>
-      <CreateOrUpdateApiResourceDialog ref="createOrUpdateApiResourceDialog" @success="handleCreateOrUpdateSuccess"></CreateOrUpdateApiResourceDialog>
+      <UpdateApiResourceDialog ref="updateApiResourceDialog" @success="handleCreateOrUpdateSuccess"></UpdateApiResourceDialog>
+      <CreateApiResourceDialog ref="createApiResourceDialog" @success="handleCreateOrUpdateSuccess"></CreateApiResourceDialog>
   </el-card>
 </template>
 
@@ -108,10 +109,11 @@ import {
 } from '@/api/identity-server/apiResource'
 import baseListQuery from '@/utils/abp'
 import Pagination from '@/components/Pagination'
-import CreateOrUpdateApiResourceDialog from './components/CreateOrUpdateApiResourceDialog'
+import UpdateApiResourceDialog from './components/UpdateApiResourceDialog'
+import CreateApiResourceDialog from './components/CreateApiResourceDialog'
 
 export default {
-    components: { Pagination, CreateOrUpdateApiResourceDialog },
+    components: { Pagination, UpdateApiResourceDialog, CreateApiResourceDialog },
     data() {
     return {
       tableKey: 0,
@@ -135,10 +137,13 @@ export default {
       this.getList()
     },
     handleCreate(){
-      this.$refs.createOrUpdateApiResourceDialog.showDialog()
+      this.$refs.createApiResourceDialog.showDialog()
     },
     handleUpdate(id){
-      this.$refs.createOrUpdateApiResourceDialog.showDialog(id)
+      this.$router.push({
+        name: 'Id4-ApiResourceEditor',
+        query:{ id }
+      })
     },
     handleDelete(id){
       this.$confirm('确定要删除？', '确定', {

@@ -49,40 +49,34 @@
                     <i class="el-alert__icon el-icon-info"></i>
                 </el-tooltip>
             </span>
-            <el-button @click="handleManageScope" type="primary">管理作用域（{{scopeCount}}）</el-button>
+            <el-button @click="handleManageScope" type="primary">管理API作用域（{{scopeCount}}）</el-button>
         </el-form-item>
-        <el-form-item label="声明">
-            <el-select style="width: 100%"
-                v-model="form.userClaims"
-                multiple
-                filterable
-                allow-create
-                default-first-option>
-                <el-option
-                    v-for="item in form.userClaims"
-                    :key="item"
-                    :label="item"
-                    :value="item">
-                </el-option>
-            </el-select>
-            <el-tag 
-                type="info" 
-                style="margin-right:5px;cursor: pointer;" 
-                v-for="(item, idx) in userClaimSuggestions" 
-                :key="idx" 
-                @click="handleSuggestionAdd(item)">
-                {{item}} <i class="el-icon-circle-plus-outline"/>
-            </el-tag>
+        <el-form-item>
+            <span slot="label">
+                用户声明 
+                <el-tooltip content="应包含在访问令牌中的关联用户声明类型的列表。" placement="top">
+                    <i class="el-alert__icon el-icon-info"></i>
+                </el-tooltip>
+            </span>
+            <SmartPicker type="claim" v-model="form.userClaims"></SmartPicker>
         </el-form-item>
         <el-form-item label="Secrets">
             <SecretEditor v-model="form.secrets"></SecretEditor>
+        </el-form-item>
+        <el-form-item>
+            <span slot="label">
+                属性
+                <el-tooltip content="需要保留任何自定义 Api 资源特定值的字典。" placement="top">
+                    <i class="el-alert__icon el-icon-info"></i>
+                </el-tooltip>
+            </span>
+            <PropertyEditor v-model="form.properties"></PropertyEditor>
         </el-form-item>
      </el-form>
     <div slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false" size="small">取 消</el-button>
         <el-button type="primary" @click="handleSubmit" size="small">保 存</el-button>
     </div>
-
     <UpdateApiResourceScopeDialog ref="updateApiResourceScopeDialog" v-model="form.scopes"></UpdateApiResourceScopeDialog>
   </el-dialog>
 </template>
@@ -91,7 +85,9 @@
 import {
   updateApiResource, getApiResource, createApiResource
 } from '@/api/identity-server/apiResource'
+import SmartPicker from './SmartPicker'
 import SecretEditor from './SecretEditor'
+import PropertyEditor from './PropertyEditor'
 import UpdateApiResourceScopeDialog from './UpdateApiResourceScopeDialog'
 import _ from 'lodash'
 
@@ -105,7 +101,8 @@ const defaultForm = {
     emphasize: false,
     showInDiscoveryDocument: true, 
     userClaims: [],
-    secrets: []
+    secrets: [],
+    properties: []
 }
 
 const userClaimSuggestions = [ 'sub','name', 'given_name', 'family_name', 'middle_name', 'nickname', 
@@ -113,7 +110,7 @@ const userClaimSuggestions = [ 'sub','name', 'given_name', 'family_name', 'middl
     'birthdate', 'zoneinfo', 'locale', 'phone_number', 'phone_number_verified', 'address', 'updated_at'  ]
 
 export default {
-    components: { SecretEditor, UpdateApiResourceScopeDialog },
+    components: { SecretEditor, SmartPicker, PropertyEditor, UpdateApiResourceScopeDialog },
     data(){
         return {
             form: _.cloneDeep(defaultForm),
@@ -170,7 +167,7 @@ export default {
             this.form.userClaims.push(userClaim)
         },
         handleManageScope(){
-            this.$refs.updateApiResourceScopeDialog.showDialog()
+            this.$refs.updateApiResourceScopeDialog.showDialog(this.form.id)
         },
         showDialog(id){
             if(id){

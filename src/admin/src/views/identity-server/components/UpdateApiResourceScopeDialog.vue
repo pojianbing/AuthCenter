@@ -92,6 +92,7 @@
 
 <script>
 import SmartPicker from './SmartPicker'
+import { getApiResourceScope, addApiResourceScope, deleteApiResourceScope, updateApiResourceScope } from '@/api/identity-server/apiResource'
 import _ from 'lodash'
 
 const defaultForm = {
@@ -119,7 +120,8 @@ export default {
             },
             dialogVisible: false,
             scopes: [],
-            updateIndex: -1
+            updateIndex: -1,
+            beforeScope: undefined
         }
     },
     watch: {
@@ -136,29 +138,56 @@ export default {
                 if(!valid) return
 
                 if(this.updateIndex === - 1){
-                    this.scopes.push(_.cloneDeep(this.form))
+                    addApiResourceScope(this.form).then(res => {
+                        this.notifySuccess()
+                        this.scopes.push(_.cloneDeep(this.form))
+                        this.resetForm()
+                    })
                 } else {
-                    this.$set(this.scopes, this.updateIndex, this.form)
-                    this.updateIndex = -1
+                    updateApiResourceScope(this.beforeScope.apiResourceId, this.beforeScope.name, this.form).then(res => {
+                        this.notifySuccess()
+                        this.$set(this.scopes, this.updateIndex, this.form)
+                        this.resetForm()
+                    })
                 }
-                
-                this.form = _.cloneDeep(defaultForm)
             });
         },
         handleDelete(item, index){
-            this.scopes.splice(index, 1)
+            deleteApiResourceScope(item.apiResourceId, item.name).then(res => {
+                this.notifySuccess()
+                this.scopes.splice(index, 1)
+            })
         },
         handleUpdate(item, index){
             this.updateIndex = index
-            this.form = this.scopes[index]
+            this.form = _.cloneDeep(this.scopes[index])
+            this.beforeScope = _.cloneDeep(this.form)
         },
         handleConfirm(){
             this.$emit('input', _.cloneDeep(this.scopes))
             this.dialogVisible = false
         },
-        showDialog(){
+        showDialog(id){
+            defaultForm.apiResourceId = id
+            this.form =  _.cloneDeep(defaultForm)
+            getApiResourceScope(id).then(res => {
+                this.scopes = res
+            })
             this.dialogVisible = true
         },
+        resetForm(){
+            this.form = _.cloneDeep(defaultForm)
+            this.updateIndex = -1
+            this.beforeScope = undefined
+        },
+        notifySuccess(){
+            this.$notify({
+                title: '成功',
+                message: '操作成功',
+                type: 'success',
+                duration: 2000
+            })
+        }
     }
 }
 </script>

@@ -32,7 +32,8 @@ namespace LazyAbp.Abp.AuthCenter.EntityFrameworkCore
          * Also map them inside AuthCenterDbContextModelCreatingExtensions.ConfigureAuthCenter
          */
         public DbSet<SharedIdentityResource> SharedIdentityResources { get; set; }
-        public DbSet<SharedApiScopes> ApiScopes { get; set; }
+        public DbSet<SharedApiScope> SharedApiScopes { get; set; }
+        public DbSet<SharedApiScopeClaim> SharedApiScopeClaims { get; set; }
 
         public AuthCenterDbContext(DbContextOptions<AuthCenterDbContext> options)
             : base(options)
@@ -67,14 +68,30 @@ namespace LazyAbp.Abp.AuthCenter.EntityFrameworkCore
                 b.Property(x => x.Name).HasMaxLength(ApiResourceConsts.NameMaxLength).IsRequired();
             });
 
-            builder.Entity<SharedApiScopes>(b =>
+            builder.Entity<SharedApiScope>(b =>
             {
                 b.ToTable(AbpIdentityServerDbProperties.DbTablePrefix + "ApiScopes");
 
                 b.ConfigureByConvention();
-
                 b.HasKey(x => new { x.ApiResourceId, x.Name });
-                b.Property(x => x.Name).HasMaxLength(ApiResourceConsts.NameMaxLength).IsRequired();
+
+                b.Property(x => x.Name).HasMaxLength(ApiScopeConsts.NameMaxLength).IsRequired();
+                b.Property(x => x.DisplayName).HasMaxLength(ApiScopeConsts.DisplayNameMaxLength);
+                b.Property(x => x.Description).HasMaxLength(ApiScopeConsts.DescriptionMaxLength);
+
+                b.HasMany(x => x.UserClaims).WithOne().HasForeignKey(x => new { x.ApiResourceId, x.Name }).IsRequired();
+            });
+
+            builder.Entity<SharedApiScopeClaim>(b =>
+            {
+                b.ToTable(AbpIdentityServerDbProperties.DbTablePrefix + "ApiScopeClaims");
+
+                b.ConfigureByConvention();
+
+                b.HasKey(x => new { x.ApiResourceId, x.Name, x.Type });
+
+                b.Property(x => x.Type).HasMaxLength(UserClaimConsts.TypeMaxLength).IsRequired();
+                b.Property(x => x.Name).HasMaxLength(ApiScopeConsts.NameMaxLength).IsRequired();
             });
 
             /* Configure your own tables/entities inside the ConfigureAuthCenter method */
