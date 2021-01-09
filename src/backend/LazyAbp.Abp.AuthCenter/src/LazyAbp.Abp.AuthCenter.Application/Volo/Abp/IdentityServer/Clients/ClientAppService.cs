@@ -19,6 +19,7 @@ using LazyAbp.Abp.AuthCenter.Volo.Abp.IdentityServer.Clients.Dtos;
 
 namespace EasyAbp.IdentityServerAdmin.Clients
 {
+    [RemoteService(false)]
     [Authorize(IdentityServerAdminPermissions.Client.Default)]
     public class ClientAppService : ReadOnlyAppService<Client, ClientDto, Guid, GetClientListInputDto>, IClientAppService
     {

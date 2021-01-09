@@ -4,7 +4,6 @@
           <div class="table-area full">
               <div class="action-filter">
                 <div class="actions">
-                    <el-button type="primary" size="small">功能按钮</el-button>
                 </div>
                 <div style="margin-left:50px" class="filters">
                     <el-input
@@ -28,45 +27,61 @@
                 style="width: 100%;"
                 @selection-change="handleSelectionChange"
                 >
-                <el-table-column type="selection" width="40" align="center" />
+                 <el-table-column type="expand">
+                  <template slot-scope="props">
+                    <el-form label-position="left" inline class="demo-table-expand">
+                      <el-form-item label="数据">
+                        <span>{{ props.row.data }}</span>
+                      </el-form-item>
+                    </el-form>
+                  </template>
+                </el-table-column>
                 <el-table-column
-                    label="客户端id"
-                    prop="clientId"
+                    label="主题标识"
+                    prop="subjectId"
                     align="center"
+                    width="150"
                 >
                     <template slot-scope="{ row }">
-                    <span>{{ row.clientId | empty }}</span>
+                    <span>{{ row.subjectId | empty }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
-                    label="客户端名称"
-                    prop="clientName"
+                    label="类型"
+                    prop="type"
+                    align="center"
+                    width="250"
+                >
+                    <template slot-scope="{ row }">
+                    <span>{{ row.type | empty }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    label="到期"
+                    prop="expiration"
                     align="center"
                 >
                     <template slot-scope="{ row }">
-                    <span>{{ row.clientName | empty }}</span>
+                      <span v-if="row.expiration">{{ row.expiration | moment('yyyy-MM-DD HH:mm:ss') }}</span>
+                      <span v-else>--</span>
                     </template>
                 </el-table-column>
                 <el-table-column
                     label="操作"
                     prop="action"
                     align="center"
-                    width="160"
+                    width="220"
                 >
-                    <template slot-scope="{ row }">
-                        <el-dropdown type="primary" size="mini">
-                            <el-button type="primary" size="mini">
-                                操作<i class="el-icon-arrow-down el-icon--right"></i>
-                            </el-button>
-                            <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item>黄金糕</el-dropdown-item>
-                                <el-dropdown-item>狮子头</el-dropdown-item>
-                                <el-dropdown-item>螺蛳粉</el-dropdown-item>
-                                <el-dropdown-item>双皮奶</el-dropdown-item>
-                                <el-dropdown-item>蚵仔煎</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </el-dropdown>
-                    </template>
+                  <template slot-scope="{ row }">
+                      <el-button
+                        size="mini"
+                        type="danger"
+                        icon="el-icon-delete"
+                        @click="handleDelete(row.id)"
+                      >
+                        删除
+                      </el-button>
+                  </template>
                 </el-table-column>
               </el-table>
               <div class="bottom">
@@ -88,8 +103,8 @@
 
 <script>
 import {
-  getClients
-} from '@/api/identity-server/client'
+  getPersistedGrants, deletePersistedGrant
+} from '@/api/identity-server/persistedGrant'
 import baseListQuery from '@/utils/abp'
 import Pagination from '@/components/Pagination'
 
@@ -117,9 +132,29 @@ export default {
     handleSearch(){
       this.getList()
     },
+    handleDelete(id){
+      this.$confirm('确定要删除？', '确定', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deletePersistedGrant(id).then(res => {
+          this.$notify({
+              title: '成功',
+              message: '操作成功',
+              type: 'success',
+              duration: 2000
+          })
+          this.getList()
+        })
+      }).catch(()=>{})
+    },
+    handleCreateOrUpdateSuccess(){
+      this.getList()
+    },
     getList() {
       this.listLoading = true
-      getClients(this.queryForm).then(response => {
+      getPersistedGrants(this.queryForm).then(response => {
         this.list = response.items
         this.total = response.totalCount
         this.listLoading = false

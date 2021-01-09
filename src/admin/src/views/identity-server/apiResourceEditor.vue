@@ -55,7 +55,13 @@
             </span>
             <SmartPicker type="claim" v-model="form.userClaims"></SmartPicker>
         </el-form-item>
-        <el-form-item label="Secrets">
+        <el-form-item>
+            <span slot="label">
+                密钥
+                <el-tooltip content="API 密钥用于内省端点。 API 可以使用 API 名称和密钥进行内省验证。" placement="top">
+                    <i class="el-alert__icon el-icon-info"></i>
+                </el-tooltip>
+            </span>
             <SecretEditor v-model="form.secrets"></SecretEditor>
         </el-form-item>
         <el-form-item>

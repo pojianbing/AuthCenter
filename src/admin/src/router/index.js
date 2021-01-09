@@ -100,12 +100,6 @@ export const constantRoutes = [
     },
     children: [
       {
-        path: 'template',
-        component: () => import('@/views/identity-server/template'),
-        name: 'Id4-template',
-        meta: { title: '模板'}
-      },
-      {
         path: 'clients',
         component: () => import('@/views/identity-server/clients'),
         name: 'Id4-Clients',
@@ -138,10 +132,10 @@ export const constantRoutes = [
         meta: { title: 'Api资源编辑'}
       },
       {
-        path: 'apiScopes',
-        component: () => import('@/views/identity-server/apiScopes'),
-        name: 'Id4-ApiScopes',
-        meta: { title: 'HelloAbp["Menu:ApiScopes"]'}
+        path: 'persistedGrants',
+        component: () => import('@/views/identity-server/persistedGrants'),
+        name: 'Id4-PersistedGrants',
+        meta: { title: '永久授权'}
       }
     ]
   },

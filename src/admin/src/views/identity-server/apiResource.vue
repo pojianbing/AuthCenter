@@ -98,7 +98,6 @@
               </div>
           </div>
       </div>
-      <UpdateApiResourceDialog ref="updateApiResourceDialog" @success="handleCreateOrUpdateSuccess"></UpdateApiResourceDialog>
       <CreateApiResourceDialog ref="createApiResourceDialog" @success="handleCreateOrUpdateSuccess"></CreateApiResourceDialog>
   </el-card>
 </template>
@@ -109,11 +108,10 @@ import {
 } from '@/api/identity-server/apiResource'
 import baseListQuery from '@/utils/abp'
 import Pagination from '@/components/Pagination'
-import UpdateApiResourceDialog from './components/UpdateApiResourceDialog'
 import CreateApiResourceDialog from './components/CreateApiResourceDialog'
 
 export default {
-    components: { Pagination, UpdateApiResourceDialog, CreateApiResourceDialog },
+    components: { Pagination, CreateApiResourceDialog },
     data() {
     return {
       tableKey: 0,
