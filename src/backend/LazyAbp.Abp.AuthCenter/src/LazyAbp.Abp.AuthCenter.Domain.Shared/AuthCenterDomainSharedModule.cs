@@ -6,6 +6,7 @@ using Volo.Abp.FeatureManagement;
 using Volo.Abp.Identity;
 using Volo.Abp.Identity.Localization;
 using Volo.Abp.IdentityServer;
+using Volo.Abp.IdentityServer.Localization;
 using Volo.Abp.Localization;
 using Volo.Abp.Localization.ExceptionHandling;
 using Volo.Abp.Modularity;
@@ -51,7 +52,11 @@ namespace LazyAbp.Abp.AuthCenter
 
                 options.Resources
                     .Get<IdentityResource>()
-                    .AddVirtualJson("/Volo/Abp/Identity/Localization/HelloAbp");
+                    .AddVirtualJson("/Volo/Abp/Identity/Localization/AuthCenter");
+
+                options.Resources
+                    .Get<AbpIdentityServerResource>()
+                    .AddVirtualJson("/Volo/Abp/IdentityServer/Localization/AuthCenter");
 
                 options.Resources
                     .Get<AuditLoggingResource>()

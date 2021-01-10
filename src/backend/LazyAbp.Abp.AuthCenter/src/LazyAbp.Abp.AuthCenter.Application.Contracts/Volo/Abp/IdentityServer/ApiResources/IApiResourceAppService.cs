@@ -16,6 +16,7 @@ namespace EasyAbp.IdentityServerAdmin.ApiResources
         Task DeleteAsync(Guid id);
         Task<List<SharedApiScopeDto>> GetScopesAsync(Guid id);
         Task AddScopesAsync(SharedApiScopeDto dto);
-        //Task AddScopes(List<>)
+        Task DeleteScopesAsync(Guid id, string name);
+        Task UpdateScopesAsync(UpdateScopeInputDo input);
     }
 }

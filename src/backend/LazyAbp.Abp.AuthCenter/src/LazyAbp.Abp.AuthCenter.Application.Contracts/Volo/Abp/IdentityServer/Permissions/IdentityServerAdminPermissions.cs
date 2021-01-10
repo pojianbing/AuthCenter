@@ -7,7 +7,7 @@ namespace EasyAbp.IdentityServerAdmin.Permissions
 {
     public class IdentityServerAdminPermissions
     {
-        public const string GroupName = "EasyAbp.IdentityServerAdmin";
+        public const string GroupName = "AuthCenter.IdentityServerAdmin";
 
         public static string[] GetAll()
         {

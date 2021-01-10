@@ -1,12 +1,12 @@
 <template>
   <el-card :shadow="shadow" class="card" :class="[data.checked ? 'checked' : '']">
-      <div class="card-body">
-        <div class="img-wrapper">
-            <svg-icon :icon-class="data.icon" style="font-size:40px" class="icon"/>
-        </div>
-        <h3>{{ data.name }}</h3>
-        <h4>{{ data.desc }}</h4>   
+    <div class="card-body">
+      <div class="img-wrapper">
+        <svg-icon :icon-class="data.icon" style="font-size:40px" class="icon" />
       </div>
+      <h3>{{ data.name }}</h3>
+      <h4>{{ data.desc }}</h4>
+    </div>
 
   </el-card>
 </template>
@@ -17,13 +17,13 @@ export default {
     data: {
       type: Object,
       isRequired: true,
-      default(){ 
-        return {} 
+      default() {
+        return {}
       }
     }
   },
-  computed:{
-    shadow(){
+  computed: {
+    shadow() {
       return this.data.checked ? 'always' : 'hover'
     }
   }
@@ -72,6 +72,5 @@ export default {
   .checked .icon{
     color: #409EFF;
   }
-
 
 </style>

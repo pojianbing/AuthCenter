@@ -15,14 +15,14 @@ namespace Volo.Abp.Identity
     [RemoteService(IsEnabled = false)]
     [Dependency(ReplaceServices = true)]
     [ExposeServices(typeof(IIdentityUserAppService),
-        typeof(IdentityUserAppService),
+        typeof(AuthCenterIdentityUserAppService),
         typeof(IHelloIdentityUserAppService),
-        typeof(HelloIdentityUserAppService))]
-    public class HelloIdentityUserAppService : IdentityUserAppService, IHelloIdentityUserAppService
+        typeof(AuthCenterIdentityUserAppService))]
+    public class AuthCenterIdentityUserAppService : IdentityUserAppService, IHelloIdentityUserAppService
     {
         private readonly IStringLocalizer<AuthCenterResource> _localizer;
 
-        public HelloIdentityUserAppService(IdentityUserManager userManager,
+        public AuthCenterIdentityUserAppService(IdentityUserManager userManager,
             IIdentityUserRepository userRepository,
             IIdentityRoleRepository roleRepository,
             IStringLocalizer<AuthCenterResource> localizer) : base(userManager, userRepository, roleRepository)
@@ -42,8 +42,8 @@ namespace Volo.Abp.Identity
             return await base.CreateAsync(input);
         }
 
-        //[Authorize(IdentityPermissions.Users.Create)]
-        //[Authorize(HelloIdentityPermissions.Users.DistributionOrganizationUnit)]
+        [Authorize(IdentityPermissions.Users.Create)]
+        [Authorize(AuthCenterIdentityPermissions.Users.DistributionOrganizationUnit)]
         public virtual async Task<IdentityUserDto> CreateAsync(IdentityUserOrgCreateDto input)
         {
             var identity = await CreateAsync(
@@ -56,7 +56,7 @@ namespace Volo.Abp.Identity
             return identity;
         }
 
-        //[Authorize(HelloIdentityPermissions.Users.DistributionOrganizationUnit)]
+        [Authorize(AuthCenterIdentityPermissions.Users.DistributionOrganizationUnit)]
         public virtual async Task AddToOrganizationUnitsAsync(Guid userId, List<Guid> ouIds)
         {
             await UserManager.SetOrganizationUnitsAsync(userId, ouIds.ToArray());
@@ -70,8 +70,8 @@ namespace Volo.Abp.Identity
             );
         }
 
-        //[Authorize(IdentityPermissions.Users.Update)]
-        //[Authorize(HelloIdentityPermissions.Users.DistributionOrganizationUnit)]
+        [Authorize(IdentityPermissions.Users.Update)]
+        [Authorize(AuthCenterIdentityPermissions.Users.DistributionOrganizationUnit)]
         public virtual async Task<IdentityUserDto> UpdateAsync(Guid id, IdentityUserOrgUpdateDto input)
         {
             var update = ObjectMapper.Map<IdentityUserOrgUpdateDto, IdentityUserUpdateDto>(input);

@@ -125,7 +125,7 @@ export default {
       }
       setSettingValues(obj).then(() => {
         this.$notify({
-          title: this.$i18n.t("HelloAbp['Success']"),
+          title: this.$i18n.t("AuthCenter['Success']"),
           message: this.$i18n.t("SettingUi['SuccessfullySaved']"),
           type: 'success',
           duration: 2000

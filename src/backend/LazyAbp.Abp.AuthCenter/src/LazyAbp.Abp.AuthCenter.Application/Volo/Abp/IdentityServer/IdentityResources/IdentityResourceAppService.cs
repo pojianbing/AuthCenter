@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
@@ -13,6 +14,7 @@ using Volo.Abp.IdentityServer.IdentityResources;
 
 namespace EasyAbp.IdentityServerAdmin.IdentityResources
 {
+    [RemoteService(false)]
     [Authorize(IdentityServerAdminPermissions.IdentityResource.Default)]
     public class IdentityResourceAppService : ReadOnlyAppService<IdentityResource, IdentityResourceDto, Guid, GetIdentityResourceListInputDto>, IIdentityResourceAppService
     {
@@ -61,13 +63,18 @@ namespace EasyAbp.IdentityServerAdmin.IdentityResources
                 Properties = new Dictionary<string, string>()
             };
             input.UserClaims.ForEach(x => identityResource.AddUserClaim(x));
-            input.Properties.ForEach(x =>
+
+            if (input.Properties != null)
             {
-                if (!identityResource.Properties.ContainsKey(x.Key))
+                input.Properties.ForEach(x =>
                 {
-                    identityResource.Properties.Add(x.Key, x.Value);
-                }
-            });
+                    if (!identityResource.Properties.ContainsKey(x.Key))
+                    {
+                        identityResource.Properties.Add(x.Key, x.Value);
+                    }
+                });
+            }
+
             identityResource = await _repository.InsertAsync(identityResource);
             return MapToGetOutputDto(identityResource);
         }

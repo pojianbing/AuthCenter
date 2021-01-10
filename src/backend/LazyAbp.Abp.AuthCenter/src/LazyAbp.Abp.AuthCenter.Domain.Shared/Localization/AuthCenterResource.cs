@@ -2,7 +2,7 @@
 
 namespace LazyAbp.Abp.AuthCenter.Localization
 {
-    [LocalizationResourceName("HelloAbp")]
+    [LocalizationResourceName("AuthCenter")]
     public class AuthCenterResource
     {
 

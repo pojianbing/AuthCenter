@@ -10,7 +10,7 @@
     >
       <div class="title-container">
         <h3 class="title">
-          {{ $t('HelloAbp["Register"]') }}
+          {{ $t('AuthCenter["Register"]') }}
           <lang-select class="set-language" />
         </h3>
         <p class="explain">
@@ -91,7 +91,7 @@
           style="width:100%;"
           @click.native.prevent="handleRegiter"
         >
-          {{ $t('HelloAbp["Register"]') }}
+          {{ $t('AuthCenter["Register"]') }}
         </el-button>
       </div>
     </el-form>

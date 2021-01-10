@@ -12,7 +12,7 @@ using Volo.Abp.ObjectExtending;
 namespace Xhznl.HelloAbp.Volo.Abp.Identity
 {
     [RemoteService(false)]
-    //[Authorize(HelloIdentityPermissions.ClaimTypes.Default)]
+    [Authorize(AuthCenterIdentityPermissions.ClaimTypes.Default)]
     public class IdentityClaimTypeAppService : IdentityAppServiceBase, IIdentityClaimTypeAppService
     {
         protected IdenityClaimTypeManager IdenityClaimTypeManager { get; }
@@ -37,7 +37,7 @@ namespace Xhznl.HelloAbp.Volo.Abp.Identity
             return new PagedResultDto<ClaimTypeDto>((long)count, this.MapListClaimTypeToListDto(source));
         }
 
-        //[Authorize(HelloIdentityPermissions.ClaimTypes.Create)]
+        [Authorize(AuthCenterIdentityPermissions.ClaimTypes.Create)]
         public virtual async Task<ClaimTypeDto> CreateAsync(CreateClaimTypeDto input)
         {
             var identityClaimType = base.ObjectMapper.Map<CreateClaimTypeDto, IdentityClaimType>(input);
@@ -46,7 +46,7 @@ namespace Xhznl.HelloAbp.Volo.Abp.Identity
             return this.MapClaimTypeToDto(claimType);
         }
 
-        //[Authorize(HelloIdentityPermissions.ClaimTypes.Update)]
+        [Authorize(AuthCenterIdentityPermissions.ClaimTypes.Update)]
         public virtual async Task<ClaimTypeDto> UpdateAsync(Guid id, UpdateClaimTypeDto input)
         {
             var identityClaimType = await this.IdentityClaimTypeRepository.GetAsync(id);
@@ -56,7 +56,7 @@ namespace Xhznl.HelloAbp.Volo.Abp.Identity
             return this.MapClaimTypeToDto(claimType);
         }
 
-        //[Authorize(HelloIdentityPermissions.ClaimTypes.Delete)]
+        [Authorize(AuthCenterIdentityPermissions.ClaimTypes.Delete)]
         public virtual async Task DeleteAsync(Guid id)
         {
             await this.IdentityClaimTypeRepository.DeleteAsync(id);

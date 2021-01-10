@@ -1,25 +1,25 @@
 <template>
   <div class="drawer-container">
     <div>
-      <h3 class="drawer-title">{{ $t('HelloAbp[\'Settings:Title\']') }}</h3>
+      <h3 class="drawer-title">{{ $t('AuthCenter[\'Settings:Title\']') }}</h3>
 
       <div class="drawer-item">
-        <span>{{ $t('HelloAbp[\'Settings:Theme\']') }}</span>
+        <span>{{ $t('AuthCenter[\'Settings:Theme\']') }}</span>
         <theme-picker style="float: right;height: 26px;margin: -3px 8px 0 0;" @change="themeChange" />
       </div>
 
       <div class="drawer-item">
-        <span>{{ $t('HelloAbp[\'Settings:TagsView\']') }}</span>
+        <span>{{ $t('AuthCenter[\'Settings:TagsView\']') }}</span>
         <el-switch v-model="tagsView" class="drawer-switch" />
       </div>
 
       <div class="drawer-item">
-        <span>{{ $t('HelloAbp[\'Settings:FixedHeader\']') }}</span>
+        <span>{{ $t('AuthCenter[\'Settings:FixedHeader\']') }}</span>
         <el-switch v-model="fixedHeader" class="drawer-switch" />
       </div>
 
       <div class="drawer-item">
-        <span>{{ $t('HelloAbp[\'Settings:SidebarLogo\']') }}</span>
+        <span>{{ $t('AuthCenter[\'Settings:SidebarLogo\']') }}</span>
         <el-switch v-model="sidebarLogo" class="drawer-switch" />
       </div>
       <a v-if="isShowJob" href="https://panjiachen.github.io/vue-element-admin-site/zh/job/" target="_blank" class="job-link">

@@ -1,11 +1,11 @@
 <template>
   <div class="app-container">
     <aside>
-      {{ $t('HelloAbp["Guide:Description"]') }}
+      {{ $t('AuthCenter["Guide:Description"]') }}
       <a href="https://github.com/kamranahmedse/driver.js" target="_blank">driver.js.</a>
     </aside>
     <el-button icon="el-icon-question" type="primary" @click.prevent.stop="guide">
-      {{ $t('HelloAbp["Guide:Button"]') }}
+      {{ $t('AuthCenter["Guide:Button"]') }}
     </el-button>
   </div>
 </template>

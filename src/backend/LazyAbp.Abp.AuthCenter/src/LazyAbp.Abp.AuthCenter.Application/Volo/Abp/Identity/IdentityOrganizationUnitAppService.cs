@@ -13,14 +13,14 @@ namespace Volo.Abp.Identity
 {
     //TODO:No RemoteServiceAttribute here will conflict with the OrganizationUnitController
     [RemoteService(false)]
-    //[Authorize(HelloIdentityPermissions.OrganitaionUnits.Default)]
-    public class OrganizationUnitAppService : IdentityAppServiceBase, IOrganizationUnitAppService
+    [Authorize(AuthCenterIdentityPermissions.OrganitaionUnits.Default)]
+    public class IdentityOrganizationUnitAppService : IdentityAppServiceBase, IOrganizationUnitAppService
     {
         protected OrganizationUnitManager UnitManager { get; }
         protected IOrganizationUnitRepository UnitRepository { get; }
         protected IIdentityUserAppService UserAppService { get; }
         protected IIdentityRoleAppService RoleAppService { get; }
-        public OrganizationUnitAppService(
+        public IdentityOrganizationUnitAppService(
             OrganizationUnitManager unitManager,
             IOrganizationUnitRepository unitRepository,
             IIdentityUserAppService userAppService,
@@ -116,7 +116,7 @@ namespace Volo.Abp.Identity
             return list;
         }
 
-        //[Authorize(HelloIdentityPermissions.OrganitaionUnits.Create)]
+        [Authorize(AuthCenterIdentityPermissions.OrganitaionUnits.Create)]
         public virtual async Task<OrganizationUnitDto> CreateAsync(OrganizationUnitCreateDto input)
         {
             var ou = new OrganizationUnit(
@@ -136,7 +136,7 @@ namespace Volo.Abp.Identity
             return ObjectMapper.Map<OrganizationUnit, OrganizationUnitDto>(ou);
         }
 
-        //[Authorize(HelloIdentityPermissions.OrganitaionUnits.Update)]
+        [Authorize(AuthCenterIdentityPermissions.OrganitaionUnits.Update)]
         public virtual async Task<OrganizationUnitDto> UpdateAsync(Guid id, OrganizationUnitUpdateDto input)
         {
             var ou = await UnitRepository.GetAsync(id);
@@ -151,7 +151,7 @@ namespace Volo.Abp.Identity
             return ObjectMapper.Map<OrganizationUnit, OrganizationUnitDto>(ou);
         }
 
-        //[Authorize(HelloIdentityPermissions.OrganitaionUnits.Delete)]
+        [Authorize(AuthCenterIdentityPermissions.OrganitaionUnits.Delete)]
         public virtual async Task DeleteAsync(Guid id)
         {
             var ou = await UnitRepository.GetAsync(id, false);
@@ -208,7 +208,7 @@ namespace Volo.Abp.Identity
             }
         }
 
-        //[Authorize(IdentityPermissions.Users.Default)]
+        [Authorize(IdentityPermissions.Users.Default)]
         public virtual async Task<PagedResultDto<IdentityUserDto>> GetUsersAsync(Guid? ouId, GetIdentityUsersInput userInput)
         {
             if (!ouId.HasValue)
@@ -241,7 +241,7 @@ namespace Volo.Abp.Identity
             );
         }
 
-        //[Authorize(IdentityPermissions.Roles.Default)]
+        [Authorize(IdentityPermissions.Roles.Default)]
         public virtual async Task<PagedResultDto<IdentityRoleDto>> GetRolesAsync(Guid? ouId, PagedAndSortedResultRequestDto roleInput)
         {
             if (!ouId.HasValue)

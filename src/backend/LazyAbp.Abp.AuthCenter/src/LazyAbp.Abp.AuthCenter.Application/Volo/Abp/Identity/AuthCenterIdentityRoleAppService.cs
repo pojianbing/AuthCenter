@@ -13,14 +13,14 @@ namespace Volo.Abp.Identity
     [RemoteService(IsEnabled = false)]
     [Dependency(ReplaceServices = true)]
     [ExposeServices(typeof(IIdentityRoleAppService), 
-        typeof(IdentityRoleAppService),
+        typeof(AuthCenterIdentityRoleAppService),
         typeof(IHelloIdentityRoleAppService),
-        typeof(HelloIdentityRoleAppService))]
-    public class HelloIdentityRoleAppService : IdentityRoleAppService, IHelloIdentityRoleAppService
+        typeof(AuthCenterIdentityRoleAppService))]
+    public class AuthCenterIdentityRoleAppService : IdentityRoleAppService, IHelloIdentityRoleAppService
     {
         private IStringLocalizer<AuthCenterResource> _localizer;
         protected OrganizationUnitManager OrgManager { get; }
-        public HelloIdentityRoleAppService(IdentityRoleManager roleManager,
+        public AuthCenterIdentityRoleAppService(IdentityRoleManager roleManager,
             IIdentityRoleRepository roleRepository,
             IStringLocalizer<AuthCenterResource> localizer,
             OrganizationUnitManager orgManager) : base(roleManager, roleRepository)
@@ -29,14 +29,14 @@ namespace Volo.Abp.Identity
             OrgManager = orgManager;
         }
 
-        //[Authorize(HelloIdentityPermissions.Roles.AddOrganizationUnitRole)]
+        [Authorize(AuthCenterIdentityPermissions.Roles.AddOrganizationUnitRole)]
         public Task AddToOrganizationUnitAsync(Guid roleId, Guid ouId)
         {
             return OrgManager.AddRoleToOrganizationUnitAsync(roleId, ouId);
         }
 
-        //[Authorize(IdentityPermissions.Roles.Create)]
-        //[Authorize(HelloIdentityPermissions.Roles.AddOrganizationUnitRole)]
+        [Authorize(IdentityPermissions.Roles.Create)]
+        [Authorize(AuthCenterIdentityPermissions.Roles.AddOrganizationUnitRole)]
         public virtual async Task<IdentityRoleDto> CreateAsync(IdentityRoleOrgCreateDto input)
         {
             var role = await base.CreateAsync(

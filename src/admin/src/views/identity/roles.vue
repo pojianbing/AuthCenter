@@ -271,8 +271,8 @@ export default {
             this.handleFilter()
             this.dialogFormVisible = false
             this.$notify({
-              title: this.$i18n.t("HelloAbp['Success']"),
-              message: this.$i18n.t("HelloAbp['SuccessMessage']"),
+              title: this.$i18n.t("AuthCenter['Success']"),
+              message: this.$i18n.t("AuthCenter['SuccessMessage']"),
               type: 'success',
               duration: 2000
             })
@@ -300,8 +300,8 @@ export default {
             this.handleFilter(false)
             this.dialogFormVisible = false
             this.$notify({
-              title: this.$i18n.t("HelloAbp['Success']"),
-              message: this.$i18n.t("HelloAbp['SuccessMessage']"),
+              title: this.$i18n.t("AuthCenter['Success']"),
+              message: this.$i18n.t("AuthCenter['SuccessMessage']"),
               type: 'success',
               duration: 2000
             })
@@ -324,8 +324,8 @@ export default {
         deleteRole(row.id).then(() => {
           this.handleFilter()
           this.$notify({
-            title: this.$i18n.t("HelloAbp['Success']"),
-            message: this.$i18n.t("HelloAbp['SuccessMessage']"),
+            title: this.$i18n.t("AuthCenter['Success']"),
+            message: this.$i18n.t("AuthCenter['SuccessMessage']"),
             type: 'success',
             duration: 2000
           })

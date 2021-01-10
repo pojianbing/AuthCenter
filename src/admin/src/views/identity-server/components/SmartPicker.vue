@@ -1,43 +1,43 @@
 <template>
   <el-card shadow="never" class="picker">
-      <!-- 输入框 -->
-      <el-input placeholder="输入2个以上字符" v-model="searchText" @input="handleSearch"></el-input>
+    <!-- 输入框 -->
+    <el-input v-model="searchText" placeholder="输入2个以上字符" @input="handleSearch" />
 
-      <!-- 搜索结果 -->
-      <template v-if="searchItems.length !== 0">
-        <el-divider></el-divider>
-        <div class="search-title">搜索结果:(点击选择)</div>
-        <div class="search-result">
-          <el-button type="primary" v-for="(item, index) in searchItems" :key="index" @click="handleSelectSearchItem(item)">{{ item }}</el-button>
-        </div>
-      </template>
-      <vue-loaders-line-scale color="#3cb371" scale="0.5" v-if="loading"/> 
+    <!-- 搜索结果 -->
+    <template v-if="searchItems.length !== 0">
+      <el-divider />
+      <div class="search-title">搜索结果:(点击选择)</div>
+      <div class="search-result">
+        <el-button v-for="(item, index) in searchItems" :key="index" type="primary" @click="handleSelectSearchItem(item)">{{ item }}</el-button>
+      </div>
+    </template>
+    <vue-loaders-line-scale v-if="loading" color="#3cb371" scale="0.5" />
 
-      <!-- 选中项 -->
-      <el-divider></el-divider>
-      <template v-if="selectedItems.length === 0">
-        <div class="search-title">没有选中项</div>
-      </template>
-      <template v-else>
-        <div class="search-title">选中项:</div>
-        <div class="selected-result">
-          <div v-for="(item, index) in selectedItems" :key="index">
-            <el-button type="primary" plain>{{ item }}</el-button>
-            <el-button type="success" icon="el-icon-edit" circle plain @click="handleUpdateSelectedItem(item, index)"></el-button>
-            <el-button type="danger" icon="el-icon-delete" circle plain @click="handleDeleteSelectedItem(index)"></el-button>
-          </div>
+    <!-- 选中项 -->
+    <el-divider />
+    <template v-if="selectedItems.length === 0">
+      <div class="search-title">没有选中项</div>
+    </template>
+    <template v-else>
+      <div class="search-title">选中项:</div>
+      <div class="selected-result">
+        <div v-for="(item, index) in selectedItems" :key="index">
+          <el-button type="primary" plain>{{ item }}</el-button>
+          <el-button type="success" icon="el-icon-edit" circle plain @click="handleUpdateSelectedItem(item, index)" />
+          <el-button type="danger" icon="el-icon-delete" circle plain @click="handleDeleteSelectedItem(index)" />
         </div>
-      </template>
+      </div>
+    </template>
 
-      <!-- 建议项 -->
-      <template v-if="suggestItems.length !== 0">
-        <el-divider></el-divider>
-        <div class="search-title">建议项:</div>
-        <div class="suggest-result">
-          <el-button v-for="(item, index) in suggestItems" :key="index" @click="handleSelectSuggetItem(item)" class="suggestion">{{ item }}</el-button>
-          <el-button icon="el-icon-plus" @click="handleLoadMoreSugget" v-if="!loadMore">更多</el-button>
-        </div>
-      </template>
+    <!-- 建议项 -->
+    <template v-if="suggestItems.length !== 0">
+      <el-divider />
+      <div class="search-title">建议项:</div>
+      <div class="suggest-result">
+        <el-button v-for="(item, index) in suggestItems" :key="index" class="suggestion" @click="handleSelectSuggetItem(item)">{{ item }}</el-button>
+        <el-button v-if="!loadMore" icon="el-icon-plus" @click="handleLoadMoreSugget">更多</el-button>
+      </div>
+    </template>
   </el-card>
 </template>
 
@@ -46,23 +46,23 @@ import { searchConsts } from '@/api/identity-server/client'
 import { debounce } from '@/utils'
 
 export default {
-  props:{
+  props: {
     type: {
       type: String,
       isRequired: false,
-      default(){
+      default() {
         return ''
       }
     },
-    value:{
+    value: {
       type: Array,
       isRequired: true,
-      default(){
+      default() {
         return []
       }
     }
   },
-  data(){
+  data() {
     return {
       searchItems: [],
       selectedItems: [],
@@ -72,88 +72,88 @@ export default {
       loadMore: false
     }
   },
-  watch: {
-    value: {
-        handler(newval, old){
-            newval = newval || []
-            this.selectedItems = [...newval]
-        },
-        immediate: true
-    }
-  },
   computed: {
     // 是否需要调用远程接口
-    isRemote(){
+    isRemote() {
       return !!this.type
     }
   },
+  watch: {
+    value: {
+      handler(newval, old) {
+        newval = newval || []
+        this.selectedItems = [...newval]
+      },
+      immediate: true
+    }
+  },
   mounted() {
-    if(this.isRemote){
+    if (this.isRemote) {
       this.loadSuggest()
     }
   },
   created() {
     this.$_searchHandler = debounce(() => {
       // 输入为空，清空搜索结果
-      if(!this.searchText) {
+      if (!this.searchText) {
         this.clearSearchResult()
         return
       }
       // 2个字符以上，则搜索
-      if(this.searchText.length >= 2){
+      if (this.searchText.length >= 2) {
         this.loading = true
         this.search(this.searchText).then(res => {
           this.searchItems = res
-        }).finally(()=>{
+        }).finally(() => {
           this.loading = false
         })
       }
     }, 600)
   },
   methods: {
-    handleSearch(){
+    handleSearch() {
       this.$_searchHandler()
     },
-    handleSelectSearchItem(item){
+    handleSelectSearchItem(item) {
       this.trySelectItem(item)
       this.clearSearchResult()
       this.clearSearchText()
     },
-    handleSelectSuggetItem(item){
+    handleSelectSuggetItem(item) {
       this.trySelectItem(item)
     },
-    handleLoadMoreSugget(){
+    handleLoadMoreSugget() {
       this.loadMoreSugget()
     },
-    handleDeleteSelectedItem(index){
-      this.selectedItems.splice(index,1)
+    handleDeleteSelectedItem(index) {
+      this.selectedItems.splice(index, 1)
       this.$emit('input', [...this.selectedItems])
     },
-    handleUpdateSelectedItem(item, index){
+    handleUpdateSelectedItem(item, index) {
       var self = this
 
-       this.$prompt('', item, {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消'
-        }).then(({ value }) => {
-          if(self.existInSelectedItems(value, index)) {
-            this.$message({
-              message: `${value}已存在`,
-              type: 'error'
-            })
-            return
-          }
+      this.$prompt('', item, {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(({ value }) => {
+        if (self.existInSelectedItems(value, index)) {
+          this.$message({
+            message: `${value}已存在`,
+            type: 'error'
+          })
+          return
+        }
 
-          this.$set(this.selectedItems, index, value)
-          this.$emit('input', [...this.selectedItems])
-        }).catch(() => {});
+        this.$set(this.selectedItems, index, value)
+        this.$emit('input', [...this.selectedItems])
+      }).catch(() => {})
     },
-    search(searchText){
-      if(this.isRemote){
+    search(searchText) {
+      if (this.isRemote) {
         return new Promise((resolve, reject) => {
           searchConsts(this.type, searchText).then(res => {
-            var exist = res.some(e=> e === searchText)
-            if(exist){
+            var exist = res.some(e => e === searchText)
+            if (exist) {
               resolve([...res])
             } else {
               resolve([...res, searchText])
@@ -166,8 +166,8 @@ export default {
         })
       }
     },
-    trySelectItem(item){
-      if(this.existInSelectedItems(item, -1)){
+    trySelectItem(item) {
+      if (this.existInSelectedItems(item, -1)) {
         this.$message({
           message: `${item} 项已被选中`,
           type: 'error'
@@ -178,21 +178,21 @@ export default {
       this.selectedItems.push(item)
       this.$emit('input', [...this.selectedItems])
     },
-    clearSearchResult(){
+    clearSearchResult() {
       this.searchItems = []
     },
-    clearSearchText(){
+    clearSearchText() {
       this.searchText = ''
     },
-    existInSelectedItems(item, index){
+    existInSelectedItems(item, index) {
       return this.selectedItems.some((e, idx) => idx !== index && e === item)
     },
-    loadSuggest(){
+    loadSuggest() {
       searchConsts(this.type, '', 5).then(res => {
         this.suggestItems = res
       })
     },
-    loadMoreSugget(){
+    loadMoreSugget() {
       this.loadMore = true
       searchConsts(this.type, '').then(res => {
         this.suggestItems = res

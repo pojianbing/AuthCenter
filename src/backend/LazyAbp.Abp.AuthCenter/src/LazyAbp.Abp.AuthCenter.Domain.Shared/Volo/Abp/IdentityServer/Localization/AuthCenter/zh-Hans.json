@@ -1,0 +1,27 @@
+{
+  "culture": "zh-Hans",
+  "texts": {
+    "Menu:IdentityServer": "IdentityServer",
+    "Menu:Clients": "客户端",
+    "Menu:IdentityResource": "认证资源",
+    "Menu:ApiResource": "Api资源",
+    "Menu:PersistedGrant": "永久授权",
+
+    "NewClient": "新客户端",
+    "NewResource": "新资源",
+    "Search": "搜索",
+    "SearchHint": "请输入关键字",
+    "Create":  "新建",
+    "Update": "更新",
+    "Delete": "删除",
+    "Name": "名称",
+    "DisplayName": "显示名称",
+    "Description": "描述",
+    "Operation": "操作",
+    "SubjectId": "主题标识",
+    "Type": "类型",
+    "Expiration": "到期",
+    "ClientId": "客户端标识",
+    "ClientName":  "客户端名称"
+  }
+}

@@ -12,6 +12,7 @@ import tenantRouter from './modules/tenant'
 import settingRouter from './modules/setting'
 import auditlogRouter from './modules/auditlog'
 import dictionaryRouter from './modules/data-dictionary'
+import identityServerRouter from './modules/identity-server'
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -85,57 +86,7 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/icons/index'),
         name: 'Dashboard',
-        meta: { title: 'HelloAbp["Menu:Dashboard"]', icon: 'home', affix: true }
-      }
-    ]
-  },
-  {
-    path: '/identity-server',
-    component: Layout,
-    redirect: '/identity-server/clients',
-    meta: {
-      title: 'HelloAbp["Menu:IdentityServer"]',
-      icon: 'id4',
-      policy: ''
-    },
-    children: [
-      {
-        path: 'clients',
-        component: () => import('@/views/identity-server/clients'),
-        name: 'Id4-Clients',
-        meta: { title: 'HelloAbp["Menu:Clients"]'}
-      },
-      {
-        path: 'clients/update',
-        component: () => import('@/views/identity-server/clientEditor'),
-        hidden: true,
-        name: 'Id4-ClientEditor',
-        meta: { title: '客户端编辑'}
-      },
-      {
-        path: 'identityResource',
-        component: () => import('@/views/identity-server/identityResource'),
-        name: 'Id4-IdentityResource',
-        meta: { title: 'HelloAbp["Menu:IdentityResource"]'}
-      },
-      {
-        path: 'apiResource',
-        component: () => import('@/views/identity-server/apiResource'),
-        name: 'Id4-ApiResource',
-        meta: { title: 'HelloAbp["Menu:ApiResource"]'}
-      },
-      {
-        path: 'apiResource/update',
-        component: () => import('@/views/identity-server/apiResourceEditor'),
-        hidden: true,
-        name: 'Id4-ApiResourceEditor',
-        meta: { title: 'Api资源编辑'}
-      },
-      {
-        path: 'persistedGrants',
-        component: () => import('@/views/identity-server/persistedGrants'),
-        name: 'Id4-PersistedGrants',
-        meta: { title: '永久授权'}
+        meta: { title: 'AuthCenter["Menu:Dashboard"]', icon: 'home', affix: true }
       }
     ]
   },
@@ -147,7 +98,7 @@ export const constantRoutes = [
   //       path: 'index',
   //       component: () => import('@/views/documentation/index'),
   //       name: 'Documentation',
-  //       meta: { title: 'HelloAbp["Menu:Documentation"]', icon: 'documentation', affix: true }
+  //       meta: { title: 'AuthCenter["Menu:Documentation"]', icon: 'documentation', affix: true }
   //     }
   //   ]
   // },
@@ -160,7 +111,7 @@ export const constantRoutes = [
   //       path: 'index',
   //       component: () => import('@/views/guide/index'),
   //       name: 'Guide',
-  //       meta: { title: 'HelloAbp["Menu:Guide"]', icon: 'guide', noCache: true }
+  //       meta: { title: 'AuthCenter["Menu:Guide"]', icon: 'guide', noCache: true }
   //     }
   //   ]
   // },
@@ -174,7 +125,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/profile/index'),
         name: 'Profile',
-        meta: { title: 'HelloAbp["Menu:Profile"]', icon: 'user', noCache: true }
+        meta: { title: 'AuthCenter["Menu:Profile"]', icon: 'user', noCache: true }
       }
     ]
   }
@@ -187,6 +138,7 @@ export const constantRoutes = [
 export const asyncRoutes = [
   /** when your routing map is too long, you can split it into small modules **/
   identityRouter,
+  identityServerRouter,
   tenantRouter,
   dictionaryRouter,
   auditlogRouter,

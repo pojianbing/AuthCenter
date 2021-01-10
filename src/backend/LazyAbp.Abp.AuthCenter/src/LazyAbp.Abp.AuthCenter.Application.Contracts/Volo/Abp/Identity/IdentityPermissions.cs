@@ -5,7 +5,7 @@ using Volo.Abp.Reflection;
 
 namespace Volo.Abp.Identity
 {
-    public static class HelloIdentityPermissions
+    public static class AuthCenterIdentityPermissions
     {
         public static class Users
         {

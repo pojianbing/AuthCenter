@@ -3,7 +3,7 @@ import { transformAbpListQuery } from '@/utils/abp'
 
 export function getApiResources(query) {
   return request({
-    url: '/api/app/apiResource',
+    url: '/api/identity-server/apiResource',
     method: 'get',
     params: transformAbpListQuery(query)
   })
@@ -11,7 +11,7 @@ export function getApiResources(query) {
 
 export function createApiResource(data) {
   return request({
-    url: '/api/app/apiResource',
+    url: '/api/identity-server/apiResource',
     method: 'post',
     data
   })
@@ -19,7 +19,7 @@ export function createApiResource(data) {
 
 export function updateApiResource(data) {
   return request({
-    url: `/api/app/apiResource/${data.id}`,
+    url: `/api/identity-server/apiResource/${data.id}`,
     method: 'put',
     data
   })
@@ -27,28 +27,28 @@ export function updateApiResource(data) {
 
 export function deleteApiResource(id) {
   return request({
-    url: `/api/app/apiResource/${id}`,
+    url: `/api/identity-server/apiResource/${id}`,
     method: 'delete'
   })
 }
 
 export function getApiResource(id) {
   return request({
-    url: `/api/app/apiResource/${id}`,
+    url: `/api/identity-server/apiResource/${id}`,
     method: 'get'
   })
 }
 
 export function getApiResourceScope(id) {
   return request({
-    url: `/api/app/apiResource/${id}/scopes`,
+    url: `/api/identity-server/apiResource/${id}/scopes`,
     method: 'get'
   })
 }
 
 export function addApiResourceScope(data) {
   return request({
-    url: `/api/app/apiResource/scopes`,
+    url: `/api/identity-server/apiResource/scopes`,
     method: 'post',
     data
   })
@@ -56,18 +56,18 @@ export function addApiResourceScope(data) {
 
 export function deleteApiResourceScope(id, name) {
   return request({
-    url: `/api/app/apiResource/${id}/scopes?name=${name}`,
+    url: `/api/identity-server/apiResource/${id}/scopes?name=${name}`,
     method: 'delete'
   })
 }
 
 export function updateApiResourceScope(beforeApiResourceId, beforeName, scope) {
   return request({
-    url: `/api/app/apiResource/scopes`,
+    url: `/api/identity-server/apiResource/scopes`,
     method: 'put',
-    data: { 
-      beforeApiResourceId, 
-      beforeName, 
+    data: {
+      beforeApiResourceId,
+      beforeName,
       scope
     }
   })

@@ -411,8 +411,8 @@ export default {
             this.handleFilter()
             this.dialogFormVisible = false
             this.$notify({
-              title: this.$i18n.t("HelloAbp['Success']"),
-              message: this.$i18n.t("HelloAbp['SuccessMessage']"),
+              title: this.$i18n.t("AuthCenter['Success']"),
+              message: this.$i18n.t("AuthCenter['SuccessMessage']"),
               type: 'success',
               duration: 2000
             })
@@ -448,8 +448,8 @@ export default {
             this.handleFilter(false)
             this.dialogFormVisible = false
             this.$notify({
-              title: this.$i18n.t("HelloAbp['Success']"),
-              message: this.$i18n.t("HelloAbp['SuccessMessage']"),
+              title: this.$i18n.t("AuthCenter['Success']"),
+              message: this.$i18n.t("AuthCenter['SuccessMessage']"),
               type: 'success',
               duration: 2000
             })
@@ -482,8 +482,8 @@ export default {
             this.handleFilterDetail()
             this.dialogFormDetailVisible = false
             this.$notify({
-              title: this.$i18n.t("HelloAbp['Success']"),
-              message: this.$i18n.t("HelloAbp['SuccessMessage']"),
+              title: this.$i18n.t("AuthCenter['Success']"),
+              message: this.$i18n.t("AuthCenter['SuccessMessage']"),
               type: 'success',
               duration: 2000
             })
@@ -519,8 +519,8 @@ export default {
             this.handleFilterDetail(false)
             this.dialogFormDetailVisible = false
             this.$notify({
-              title: this.$i18n.t("HelloAbp['Success']"),
-              message: this.$i18n.t("HelloAbp['SuccessMessage']"),
+              title: this.$i18n.t("AuthCenter['Success']"),
+              message: this.$i18n.t("AuthCenter['SuccessMessage']"),
               type: 'success',
               duration: 2000
             })
@@ -543,7 +543,7 @@ export default {
         // 清空字典值
         this.listDetails = null
         this.$notify({
-          title: this.$i18n.t("HelloAbp['Success']"),
+          title: this.$i18n.t("AuthCenter['Success']"),
           message: this.$i18n.t('dataDictionary.deleteSuccess'),
           type: 'success',
           duration: 2000
@@ -563,7 +563,7 @@ export default {
       deleteDatationariesDetail(this.selectDetails).then(() => {
         this.handleFilterDetail()
         this.$notify({
-          title: this.$i18n.t("HelloAbp['Success']"),
+          title: this.$i18n.t("AuthCenter['Success']"),
           message: this.$i18n.t('dataDictionary.deleteSuccess'),
           type: 'success',
           duration: 2000

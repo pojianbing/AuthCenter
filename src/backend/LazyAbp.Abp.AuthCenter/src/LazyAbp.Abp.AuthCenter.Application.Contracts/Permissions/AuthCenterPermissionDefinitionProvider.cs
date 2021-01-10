@@ -14,22 +14,22 @@ namespace LazyAbp.Abp.AuthCenter.Permissions
         {
             var identityGroup = context.GetGroup(IdentityPermissions.GroupName);
 
-            var ouPermission = identityGroup.AddPermission(HelloIdentityPermissions.OrganitaionUnits.Default, IdentityL("Permission:OrganitaionUnitManagement"));
-            ouPermission.AddChild(HelloIdentityPermissions.OrganitaionUnits.Create, IdentityL("Permission:Create"));
-            ouPermission.AddChild(HelloIdentityPermissions.OrganitaionUnits.Update, IdentityL("Permission:Edit"));
-            ouPermission.AddChild(HelloIdentityPermissions.OrganitaionUnits.Delete, IdentityL("Permission:Delete"));
+            var ouPermission = identityGroup.AddPermission(AuthCenterIdentityPermissions.OrganitaionUnits.Default, IdentityL("Permission:OrganitaionUnitManagement"));
+            ouPermission.AddChild(AuthCenterIdentityPermissions.OrganitaionUnits.Create, IdentityL("Permission:Create"));
+            ouPermission.AddChild(AuthCenterIdentityPermissions.OrganitaionUnits.Update, IdentityL("Permission:Edit"));
+            ouPermission.AddChild(AuthCenterIdentityPermissions.OrganitaionUnits.Delete, IdentityL("Permission:Delete"));
 
             var userPermission = identityGroup.GetPermissionOrNull(IdentityPermissions.Users.Default);
-            userPermission?.AddChild(HelloIdentityPermissions.Users.DistributionOrganizationUnit, IdentityL("Permission:DistributionOrganizationUnit"));
+            userPermission?.AddChild(AuthCenterIdentityPermissions.Users.DistributionOrganizationUnit, IdentityL("Permission:DistributionOrganizationUnit"));
 
             var rolePermission = identityGroup.GetPermissionOrNull(IdentityPermissions.Roles.Default);
-            rolePermission?.AddChild(HelloIdentityPermissions.Roles.AddOrganizationUnitRole, IdentityL("Permission:AddOrganizationUnitRole"));
+            rolePermission?.AddChild(AuthCenterIdentityPermissions.Roles.AddOrganizationUnitRole, IdentityL("Permission:AddOrganizationUnitRole"));
 
             //Claim
-            var claimPermission = identityGroup.AddPermission(HelloIdentityPermissions.ClaimTypes.Default, IdentityL("Permission:ClaimManagement"));
-            claimPermission.AddChild(HelloIdentityPermissions.ClaimTypes.Create, IdentityL("Permission:Create"));
-            claimPermission.AddChild(HelloIdentityPermissions.ClaimTypes.Update, IdentityL("Permission:Edit"));
-            claimPermission.AddChild(HelloIdentityPermissions.ClaimTypes.Delete, IdentityL("Permission:Delete"));
+            var claimPermission = identityGroup.AddPermission(AuthCenterIdentityPermissions.ClaimTypes.Default, IdentityL("Permission:ClaimManagement"));
+            claimPermission.AddChild(AuthCenterIdentityPermissions.ClaimTypes.Create, IdentityL("Permission:Create"));
+            claimPermission.AddChild(AuthCenterIdentityPermissions.ClaimTypes.Update, IdentityL("Permission:Edit"));
+            claimPermission.AddChild(AuthCenterIdentityPermissions.ClaimTypes.Delete, IdentityL("Permission:Delete"));
 
             //AuditLogging
             var auditLogGroup = context.AddGroup(AuditLogPermissions.GroupName);

@@ -19,6 +19,7 @@ using Volo.Abp;
 
 namespace EasyAbp.IdentityServerAdmin.Application.EasyAbp.IdentityServerAdmin.ApiResources
 {
+    [RemoteService(false)]
     [Authorize(IdentityServerAdminPermissions.ApiResource.Default)]
     public class ApiResourceAppService : ReadOnlyAppService<ApiResource, ApiResourceDto, Guid, GetApiResourceListInput>, IApiResourceAppService
     {

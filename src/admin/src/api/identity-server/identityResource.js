@@ -3,7 +3,7 @@ import { transformAbpListQuery } from '@/utils/abp'
 
 export function getIdentityResources(query) {
   return request({
-    url: '/api/app/identityResource',
+    url: '/api/identity-server/identityResource',
     method: 'get',
     params: transformAbpListQuery(query)
   })
@@ -11,7 +11,7 @@ export function getIdentityResources(query) {
 
 export function createIdentityResource(data) {
   return request({
-    url: '/api/app/identityResource',
+    url: '/api/identity-server/identityResource',
     method: 'post',
     data
   })
@@ -19,7 +19,7 @@ export function createIdentityResource(data) {
 
 export function updateIdentityResource(data) {
   return request({
-    url: `/api/app/identityResource/${data.id}`,
+    url: `/api/identity-server/identityResource/${data.id}`,
     method: 'put',
     data
   })
@@ -27,14 +27,14 @@ export function updateIdentityResource(data) {
 
 export function deleteIdentityResource(id) {
   return request({
-    url: `/api/app/identityResource/${id}`,
+    url: `/api/identity-server/identityResource/${id}`,
     method: 'delete'
   })
 }
 
 export function getIdentityResource(id) {
   return request({
-    url: `/api/app/identityResource/${id}`,
+    url: `/api/identity-server/identityResource/${id}`,
     method: 'get'
   })
 }

@@ -1,0 +1,27 @@
+{
+  "culture": "en",
+  "texts": {
+    "Menu:IdentityServer": "IdentityServer",
+    "Menu:Clients": "Client",
+    "Menu:IdentityResource": "Identity Resource",
+    "Menu:ApiResource": "Api Resource",
+    "Menu:PersistedGrant": "PersistedGrant",
+
+    "NewClient": "New Client",
+    "NewResource": "New Resource",
+    "Search": "Search",
+    "SearchHint": "Please enter the keyword",
+    "Create": "Create",
+    "Update": "Update",
+    "Delete": "Delete",
+    "Name": "Name",
+    "DisplayName": "Display Name",
+    "Description": "Description",
+    "Operation": "Operation",
+    "SubjectId": "Subject Id",
+    "Type": "Type",
+    "Expiration": "Expiration",
+    "ClientId": "Client Id",
+    "ClientName": "Client Name"
+  }
+}
