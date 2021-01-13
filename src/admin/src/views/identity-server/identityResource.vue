@@ -71,7 +71,7 @@
                 icon="el-icon-edit"
                 @click="handleUpdate(row.id)"
               >
-                {{ $t("AbpIdentityServer['Delete']") }}
+                {{ $t("AbpIdentityServer['Update']") }}
               </el-button>
               <el-button
                 size="mini"

@@ -33,7 +33,7 @@ namespace LazyAbp.Abp.AuthCenter
         typeof(AuthCenterHttpApiModule),
         typeof(AbpAutofacModule),
         typeof(AbpAccountWebIdentityServerModule),
-        typeof(AbpCachingStackExchangeRedisModule),
+        //typeof(AbpCachingStackExchangeRedisModule),
         typeof(AbpAspNetCoreMvcUiMultiTenancyModule),
         typeof(AuthCenterApplicationModule),
         typeof(AuthCenterEntityFrameworkCoreDbMigrationsModule),
